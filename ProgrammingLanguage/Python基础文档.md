@@ -28,7 +28,11 @@ Python版本：Python3.6；IDE：Pycharm。
 
 从Python的[官方网站](https://www.python.org/)下载`Python3+`对应的64位或32位安装程序，运行`.exe`程序开始安装：
 
-<div align="center">![Python-l](./assets/l.png)</div>
+<div align="center">
+
+  ![Python-l](./assets/l.png)
+
+</div>
 
 勾选`Add Python to PATH`,使得cmd可以使用python命令。
 
