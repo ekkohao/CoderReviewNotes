@@ -933,3 +933,132 @@ int('10010', **kw)
 ```
 
 ## 4. 模块
+
+在计算机程序的开发过程中，随着程序代码越写越多，在一个文件里代码就会越来越长，越来越不容易维护。
+
+为了编写可维护的代码，我们把很多函数分组，分别放到不同的文件里，这样，每个文件包含的代码就相对较少，很多编程语言都采用这种组织代码的方式。在Python中，一个`.py`文件就称之为一个模块（Module）。
+
+你也许还想到，如果不同的人编写的模块名相同怎么办？为了避免模块名冲突，Python又引入了按目录来组织模块的方法，称为包（Package）。
+
+举个例子，一个`abc.py`的文件就是一个名字叫`abc`的模块，一个`xyz.py`的文件就是一个名字叫`xyz`的模块。
+
+现在，假设我们的`abc`和`xyz`这两个模块名字与其他模块冲突了，于是我们可以通过包来组织模块，避免冲突。方法是选择一个顶层包名，比如`mycompany`，按照如下目录存放：
+
+```
+mycompany
+├─ __init__.py
+├─ abc.py
+└─ xyz.py
+```
+
+引入了包以后，只要顶层的包名不与别人冲突，那所有模块都不会与别人冲突。现在，`abc.py`模块的名字就变成了`mycompany.abc`，类似的，`xyz.py`的模块名变成了`mycompany.xyz`。
+
+请注意，每一个包目录下面都会有一个`__init__.py`的文件，这个文件是必须存在的，否则，Python就把这个目录当成普通目录，而不是一个包。`__init__.py`可以是空文件，也可以有Python代码，因为`__init__.py`本身就是一个模块，而它的模块名就是`mycompany`。
+
+### 4.1 使用模块
+
+python中导入模块的两种方式：
+
+```python
+# 第一种
+import sys
+# 第二种
+from sys import *
+```
+
+使用第一种导入方法在使用导入的函数时必须要加上模块名，而第二种则不用。
+
+我们以内建的`sys`模块为例，编写一个`hello`的模块：
+
+```python
+#!/usr/bin/env python3		# 这个注释可以让这个文件直接在Unix/Linux/Mac上运行
+# -*- coding: utf-8 -*-
+
+' a test module '     		# 这是一个字符串，表示模块的文档注释，任何模块代码的第一个字符串都被视
+							# 为模块的文档注释；
+    
+__author__ = 'Michael Liao'	# 使用__author__变量把作者写进去
+
+import sys
+
+def test():
+    args = sys.argv
+    if len(args)==1:
+        print('Hello, world!')
+    elif len(args)==2:
+        print('Hello, %s!' % args[1])
+    else:
+        print('Too many arguments!')
+
+if __name__=='__main__': 	# 当我们在命令行运行该模块文件时，Python解释器把一个特殊变量__name__置
+    test()					# 为__main__，而如果在其他地方导入该模块时，if判断将失败
+```
+
+###### 作用域
+
+在一个模块中，我们可能会定义很多函数和变量，但有的函数和变量我们希望给别人使用，有的函数和变量我们希望仅仅在模块内部使用。在Python中，是通过`_`前缀来实现的。
+
+正常的函数和变量名是公开的（public），可以被直接引用，比如：`abc`，`x123`，`PI`等；
+
+类似`__xxx__`这样的变量是特殊变量，可以被直接引用，但是有特殊用途，比如上面的`__author__`，`__name__`就是特殊变量，模块定义的文档注释也可以用特殊变量`__doc__`访问，我们自己的变量一般不要用这种变量名；
+
+类似`_xxx`和`__xxx`这样的函数或变量就是非公开的（private），不应该被直接引用，比如`_abc`，`__abc`等；
+
+之所以我们说，private函数和变量“不应该”被直接引用，而不是“不能”被直接引用，是因为Python并没有一种方法可以完全限制访问private函数或变量，但是，从编程习惯上不应该引用private函数或变量。
+
+### 4.2 安装第三方模块
+
+在Python中，安装第三方模块，是通过包管理工具pip完成的。
+
+如果你正在使用Mac或Linux，安装pip本身这个步骤就可以跳过了。
+
+如果你正在使用Windows，请参考[安装Python](https://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/0014316090478912dab2a3a9e8f4ed49d28854b292f85bb000)一节的内容，确保安装时勾选了`pip`和`Add python.exe to Path`。
+
+在命令提示符窗口下尝试运行`pip`，如果Windows提示未找到命令，可以重新运行安装程序添加`pip`。
+
+注意：Mac或Linux上有可能并存Python 3.x和Python 2.x，因此对应的pip命令是`pip3`。
+
+例如，我们要安装一个第三方库——Python Imaging Library，这是Python下非常强大的处理图像的工具库。不过，PIL目前只支持到Python 2.7，并且有年头没有更新了，因此，基于PIL的Pillow项目开发非常活跃，并且支持最新的Python 3。
+
+一般来说，第三方库都会在Python官方的[pypi.python.org](https://pypi.python.org/)网站注册，要安装一个第三方库，必须先知道该库的名称，可以在官网或者pypi上搜索，比如Pillow的名称叫[Pillow](https://pypi.python.org/pypi/Pillow/)，因此，安装Pillow的命令就是：
+
+```
+pip install Pillow
+```
+
+耐心等待下载并安装后，就可以使用Pillow了。
+
+![且慢](./assets/l-1525398716149.png)
+
+###### 安装常用模块
+
+在使用Python时，我们经常需要用到很多第三方库，例如，上面提到的Pillow，以及MySQL驱动程序，Web框架Flask，科学计算Numpy等。用pip一个一个安装费时费力，还需要考虑兼容性。我们推荐直接使用[Anaconda](https://www.anaconda.com/)，这是一个基于Python的数据处理和科学计算平台，它已经内置了许多非常有用的第三方库，我们装上Anaconda，就相当于把数十个第三方模块自动安装好了，非常简单易用。
+
+可以从[Anaconda官网](https://www.anaconda.com/download/)下载GUI安装包，安装包有500~600M，所以需要耐心等待下载。网速慢的同学请移步[国内镜像](https://pan.baidu.com/s/1kU5OCOB#list/path=%2Fpub%2Fpython)。下载后直接安装，Anaconda会把系统Path中的python指向自己自带的Python，并且，Anaconda安装的第三方模块会安装在Anaconda自己的路径下，不影响系统已安装的Python目录。
+
+安装好Anaconda后，重新打开命令行窗口，输入python，可以看到Anaconda的信息：
+
+```
+┌────────────────────────────────────────────────────────┐
+│Command Prompt - python                           - □ x │
+├────────────────────────────────────────────────────────┤
+│Microsoft Windows [Version 10.0.0]                      │
+│(c) 2015 Microsoft Corporation. All rights reserved.    │
+│                                                        │
+│C:\> python                                             │
+│Python 3.6.3 |Anaconda, Inc.| ... on win32              │
+│Type "help", ... for more information.                  │
+│>>> import numpy                                        │
+│>>> _                                                   │
+│                                                        │
+│                                                        │
+│                                                        │
+└────────────────────────────────────────────────────────┘
+```
+
+可以尝试直接`import numpy`等已安装的第三方模块。
+
+
+
+## 5. 类和对象
+
