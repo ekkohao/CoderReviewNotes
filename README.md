@@ -1,17 +1,44 @@
 # EncyclopediaOfProgramming
 
-## Python :dango:
+## 编程语言:dango:
+
+> **Java** :o:
+
+:one: [Java 基础](ProgrammingNotes/JavaBasic.md)
+
+:two: [Java 虚拟机](ProgrammingNotes/JavaVirtualMachine.md)
+
+:three: [Java 多线程与并发](ProgrammingNotes/JavaMultithreadingAndConcurrency.md)
+
+:four: [JDK 源码分析](ProgrammingNotes/JDKSourceCodeAnalysis.md)
+
+:nine: [Java Mybatis](ProgrammingNotes/JavaMybatis.md)
+
+> **C++**
+
+:one: [C++ 基础](ProgrammingNotes/CppBasics.md)
+
+> **Python**
 
 :one: [Python 基础](https://github.com/jerehao/EncyclopediaOfProgramming/blob/master/ProgrammingLanguage/Python%20%E5%9F%BA%E7%A1%80.md)
 
-## Java :dango:
+## 编程工具🍡
 
-:one: [Java 基础](https://github.com/jerehao/EncyclopediaOfProgramming/blob/master/ProgrammingLanguage/Java%20%E5%9F%BA%E7%A1%80.md)
+1️⃣ [Gradle](ProgrammingNotes/Gradle.md)
 
-:two: [Java 虚拟机](https://github.com/jerehao/EncyclopediaOfProgramming/blob/master/ProgrammingLanguage/Java%20%E8%99%9A%E6%8B%9F%E6%9C%BA.md)
+2️⃣ [Docker](ProgrammingNotes/Docker.md)
 
-:nine: [Java Mybatis](https://github.com/jerehao/EncyclopediaOfProgramming/blob/master/ProgrammingLanguage/Java%20Mybatis.md)
+## 操作系统 :dango:
 
-## Gradle :dango:
+:one: [操作系统](ProgrammingNotes/OperatingSystem.md)
 
-:one: [Gradle](https://github.com/jerehao/EncyclopediaOfProgramming/blob/master/ProgrammingLanguage/Gradle.md)
+:two: [Linux 基础](ProgrammingNotes/LinuxBasics.md)
+
+## 分布式 :dango:
+
+:one: [分布式基础](ProgrammingNotes/DistributedSystem.md)
+
+## 机器学习 :dango:
+
+:one: [机器学习基础](MachineLearning/MachineLearningBasics.md)
+
