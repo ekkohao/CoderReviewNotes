@@ -286,7 +286,7 @@ $ who
 
 ### 2.1 文件系统组成 ###
 
-![img](Linux 基础.assets/BSD_disk.png)
+![img](LinuxBasics.assets/BSD_disk.png)
 
 最主要的几个组成部分如下：
 
@@ -329,7 +329,7 @@ inode 具有以下特点：
 
 inode 中记录了文件内容所在的 block 编号，但是每个 block 非常小，一个大文件随便都需要几十万的 block。而一个 inode 大小有限，无法直接引用这么多 block 编号。因此引入了间接、双间接、三间接引用。间接引用是指，让 inode 记录的引用 block 块记录引用信息。
 
-![img](Linux 基础.assets/inode_with_signatures.jpg)
+![img](LinuxBasics.assets/inode_with_signatures.jpg)
 
 ### 2.2 linux文件目录 ###
 
@@ -343,13 +343,13 @@ inode 中记录了文件内容所在的 block 编号，但是每个 block 非常
 - /usr (unix software resource)：所有系统默认软件都会安装到这个目录；
 - /var (variable)：存放系统或程序运行过程中的数据文件
 
-![img](Linux 基础.assets/linux-filesystem.png)
+![img](LinuxBasics.assets/linux-filesystem.png)
 
 ## 3. 进程管理 ##
 
 ### 3.1 进程状态 ###
 
-[![img](Linux 基础.assets/76a49594323247f21c9b3a69945445ee.png)](https://github.com/CyC2018/Interview-Notebook/blob/master/pics/76a49594323247f21c9b3a69945445ee.png)
+[![img](LinuxBasics.assets/76a49594323247f21c9b3a69945445ee.png)](https://github.com/CyC2018/Interview-Notebook/blob/master/pics/76a49594323247f21c9b3a69945445ee.png)
 
 | 状态 | 说明                                                         |
 | ---- | ------------------------------------------------------------ |
@@ -483,7 +483,7 @@ int clone(int (fn)(void ), void *child_stack, int flags, void *arg);
 - 得到 SIGCHLD 信号；
 - waitpid() 或者 wait() 调用会返回。
 
-[![img](Linux 基础.assets/flow.png)](https://github.com/CyC2018/Interview-Notebook/blob/master/pics/flow.png)
+[![img](LinuxBasics.assets/flow.png)](https://github.com/CyC2018/Interview-Notebook/blob/master/pics/flow.png)
 
 其中子进程发送的 SIGCHLD 信号包含了子进程的信息，包含了进程 ID、进程状态、进程使用 CPU 的时间等。
 
@@ -572,11 +572,11 @@ int main() {
 
 如下给出了两种描绘**半双工管道**的方法，左图中管道的两端在一个进程中相互连接，右图中则强调数据需要通过内核在管道中流动：
 
- ![img](Linux 基础.assets/759985-20150904150716372-1876931354.png)
+ ![img](LinuxBasics.assets/759985-20150904150716372-1876931354.png)
 
 管道通常在单个进程中没有太大用处，下图显示了父子进程之间的管道：**进程先调用pipe，接着调用fork，从而创建从父进程到子进程的IPC管道**：
 
- ![img](Linux 基础.assets/759985-20150904150726153-1667974687.png)
+ ![img](LinuxBasics.assets/759985-20150904150726153-1667974687.png)
 
 当管道的一端被关闭后，下列两条规则起作用：
 
@@ -698,7 +698,7 @@ int main() {
 
 FIFO 常用于客户-服务器应用程序中，FIFO 用作汇聚点，在客户进程和服务器进程之间传递数据。
 
-![img](Linux 基础.assets/2ac50b81-d92a-4401-b9ec-f2113ecc3076.png)
+![img](LinuxBasics.assets/2ac50b81-d92a-4401-b9ec-f2113ecc3076.png)
 
 **管道通信特征和不足**
 
@@ -985,11 +985,215 @@ int main(){
 
 #### 4.1.4 共享内存
 
+当一个程序想和另外一个程序通信的时候。那内存可以为这两个程序生成一块公共的内存区域（通过页表指向同一块物理内存实现）。这块被两个进程分享的内存区域叫做**共享内存**。
+
+由于全部进程共享同一块内存，并不须要通过系统调用或者其他须要切入内核的过程来完毕。同一时候它也避免了对数据的各种不必要的复制。 所以共享内存在各种进程间通信方式中具有最高的效率。但是需要自己实现共享内存的同步访问。通常是通过使用**信号量（参见下一节）**进行同步。
+
+**共享内存函数原型**
+
+```c
+/**
+ * 创建共享内存
+ * @param shmflg 创建标志
+ *    IPC_CREAT：够创建一个具有指定键值的新共享内存块。
+ *    IPC_EXCL：与 IPC_CREAT 一同使用。假设已有一个具有这个键值的共享内存块存在。则shmget会调用失败。
+ * @return 成功返回标识符，失败返回-1
+ **/
+int shmget(key_t key ,int size,int shmflg);
+    
+/**
+ * 映射共享内存
+ * @param shmaddr 共享内存起始地址。0，则有内核指定，非0则为设定地址
+ * @param shmflg 操作模式。SHM_RDONLY 只读。SHM_RND 将 shmaddr向下对齐到内存地址。
+ * @return 成功返回共享内存起始，失败返回-1
+ **/
+int shmat(int shmid,char *shmaddr，int flag);
+    
+/**
+ * 卸载共享内存
+ * @return 成功返回0，失败返回-1
+ **/
+int shmdt(char *shmaddr);
+
+/**
+ * 控制共享内存
+ * 应当在结束使用每一个共享内存块的时候都使用 shmctl 进行释放，以防止超过系统所同意的共享内存块的
+ * 总数限制。调用 exit 和 exec 会使进程脱离共享内存块，但不会删除这个内存块。
+ * 也可以在命令行通过ipcrm控制删除共享内存
+ *
+ * @param cmd，控制命令
+ *	  IPC_STAT 获取共享内存到buf
+ *    IPC_SET 将buf设置到共享内存中
+ *    IPC_RMID 删除共享内存
+ * @return 成功返回0，失败返回-1
+ **/
+int  shmctl( int shmid , int cmd , struct shmid_ds *buf );
+```
+
 #### 4.1.5 信号量
+
+信号量主要通过PV操作控制线程间同步与互斥。
+
+**函数原型**
+
+```c
+#include <sys/sem.h>
+
+/**
+ * 创建信号量
+ * @param num_sems 信号量大小
+ * @param sem_flags 创建标志 IPC_CREAT | IPC_EXCL
+ * @return
+ **/
+int semget(key_t key, int num_sems, int sem_flags);
+
+/**
+ * 改变信号量
+ * @param sem_opa 更改操作，其结构体如下
+ *    struct sembuf{
+ *		  short sem_num; //除非使用一组信号量，否则它为0 
+ *		  short sem_op; //信号量在一次操作中需要改变的数据，通常是两个数，即-1和+1
+ *		  short sem_flg;//通常为SEM_UNDO,使操作系统跟踪信号，并在进程没有释放该信号量而终止时，
+ * 						//操作系统释放信号量
+ *	  }
+ * @return
+ **/
+int semop(int sem_id, struct sembuf *sem_opa, size_t num_sem_ops);
+
+/**
+ * 控制信号量
+ * @param command 控制命令
+ *	   SETVAL 通过第四个union参数的val初始化信号量值
+ * 	   IPC_RMID 删除
+ * @param 第四参数 通常为一个union
+ * 	   union semun{ 
+ * 		  int val; 
+ *		  struct semid_ds *buf; 
+ *		  unsigned short *arry; 
+ *	   };
+ * @return
+ **/
+int semctl(int sem_id, int sem_num, int command, ...);
+```
 
 #### 4.1.6 套接字
 
+参见网络
 
+### 4.2 linux线程间通信
+
+### 4.3 linux进程与线程通信
+
+## 5. linux 多路复用
+
+### 5.1 IO多路复用
+
+通信方法中经常需要监听文件描述符的状态变化，而且大多数情况要同时监听大量的这些变化，就需要一个高效的方法去完成。
+
+#### 5.1.1 select
+
+select就是用来监视某个或某些文件描述符的状态变化的。select函数原型如下：
+
+```c
+#include <sys/select.h>
+
+/**
+ * @param nfds 待测试的描述集的总个数，linux为fdmax + 1
+ * @param readfds 当这些句柄的状态变成可读时系统就告诉select函数返回
+ * @param writefds 当这些句柄的状态变成可写时系统就告诉select函数返回
+ * @param exceptfds 句柄上有特殊情况发生时系统会告诉select函数返回。
+ * @param timeout 设置超时，NULL为无限等待，其结构体如下
+ * 		struct timeval {
+ *			long tv_sec; //seconds
+ *			long tv_usec; //microseconds
+ * 		}
+ * @return 监测到文件变化返回大于0，超时返回0，出错返回-1
+ */
+int select (int nfds, 
+            fd_set *readfds, fd_set *writefds, fd_set *exceptfds, 
+            struct timeval *timeout);
+
+```
+
+缺点：
+
+1. 单个进程能够监视的文件描述符的数量存在最大限制，通常是1024 
+2. 内核 / 用户空间内存拷贝问题，每次调用select都需要复制大量的句柄数据
+3. 当返回时，仍需要遍历整个句柄数组才能知道那个句柄发生了事件
+4. 只能水平触发 
+
+#### 5.1.2 poll
+
+```c
+#include <poll.h>
+
+/**
+ * @param fds fd集，其结构如下
+ * 		struct pollfd {
+ *		    int fd;             //指定要监听的文件描述符
+ *			short events;       //指定监听fd上的什么事件
+ *   		short revents;      //fd上事件就绪后，用于保存实际发生的事件
+ *		}
+ * @param nfds 文件描述符的个数
+ * @param timeout 监听超时
+ * @param 与select相同
+ **/
+
+int poll(struct pollfd *fds, nfds_t nfds, int timeout);
+```
+
+poll的事件类型：
+
+![img](LinuxBasics.assets/20160422142729580) 
+
+poll相比select只是使用链表表示fd集，因而没有了文件描述符数量的约束（最大65535）。
+
+#### 5.1.3 epoll
+
+epoll 与 select 和 poll 在使用和实现上有很大区别。首先，epoll 使用一组函数来完成，而不是单独的一个函数；其次，epoll 把用户关心的文件描述符上的事件放在内核里的一个事件表中，无须向select和poll那样每次调用都要重复传入文件描述符集合事件集。 
+
+```c
+#include<sys/epoll.h>
+
+/**
+ * 创建指定大小的epoll
+ * @return 调用成功返回一个文件描述符，失败返回-1并设置errno。
+ **/
+int epoll_create(int size);
+
+/**
+ * 控制epoll
+ * @param epfd epoll_create的返回值
+ * @param op 操作类型，有三种：EPOLL_CTL_ADD/EPOLL_CTL_MOD/EPOLL_CTL_DEL分别为注册/修改/删除事件
+ * @param fd 要修改事件的fd
+ * @param event 其结构体为
+ * 		struct epoll_event {
+ *   		__int32_t events;       //epoll事件
+ *	   		epoll_data_t data;      //用户数据
+ * 		};
+ * 		typedef union epoll_data {
+ *   		void *ptr;
+ *   		int  fd;
+ *   		uint32_t u32;
+ *   		uint64_t u64;
+ * 		} epoll_data
+ * @return 调用成功返回0，调用失败返回-1并设置errno。
+ **/
+int epoll_ctl(int epfd, int op, int fd, struct epoll_event *event);
+    
+
+/**
+ * 获取事件发生列表
+ * @param events 监测到的就绪事件
+ * @param maxevents 最大监听事件数量
+ * @return 函数调用成功返回就绪文件描述符个数，失败返回-1并设置errno。
+ **/
+int epoll_wait(int epfd, struct epoll_event *events, int maxevents, int timeout);
+```
+
+三种多路复用方法的比较：
+
+![img](LinuxBasics.assets/20160422143642896) 
 
 
 
