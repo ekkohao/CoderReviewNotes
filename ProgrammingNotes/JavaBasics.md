@@ -1268,7 +1268,7 @@ CharBuffer，ByteBuffer ，ShortBuffer，IntBuffer，LongBuffer，FloatBuffer，
 3. SelectionKey.OP_READ：读事件
 4. SelectionKey.OP_WRITE：写事件
 
-## 9. 反射与动态代理
+## 9. 反射与代理
 
 ### 9.1 反射
 
@@ -1487,10 +1487,20 @@ Java 是纯粹的面向对象语言，所有的对象都继承自 java.lang.Obje
 
 > [What are the main differences between Java and C++?](http://cs-fundamentals.com/tech-interview/java/differences-between-java-and-cpp.php)
 
-### 12.4 JRE or JDK
+### 13.4 JRE or JDK
 
 - JRE is the JVM program, Java application need to run on JRE.
 - JDK is a superset of JRE, JRE + tools for developing java programs. e.g, it provides the compiler "javac"
+
+## 14. 其他常见问题
+
+### 14.1 类重名问题
+
+* 如果精确导入两个重名类，则编译错误
+* 如果精确导入一个类，该类再本包或其他导入包有重名，那么使用精确导入的类
+* 如果使用`.*`导入类，
+  * 本包中含有和导入包的重名类，则使用本包的类
+  * 导入包之间含有重名类，且本包不含有，则编译报错
 
 ## 参考资料
 
