@@ -6,7 +6,7 @@
 
 final 可以修饰变量，方法和类，使得被修饰对象不能被作用于某项行为。
 
-###### 变量
+**变量**
 
 使得变量不能被赋值，使得变量在声明时必须给出初始值（成员变量也可以在类或对象初始化时给定初始值），之后不能再对此变量赋值。
 
@@ -22,13 +22,13 @@ final AObject y = new AObject();
 y.a = 1;
 ```
 
-######  方法
+**方法**
 
 使得方法不能被重写，使得子类不能重写该方法。
 
 private 方法隐式地被指定为 final，如果在子类中定义的方法和基类中的一个 private 方法签名相同，此时子类的方法不是覆盖基类方法，而是在子类中定义了一个新的方法。
 
-###### 类 
+**类**
 
 使得类不能被继承，声明类不允许被其他类继承。
 
@@ -36,7 +36,7 @@ private 方法隐式地被指定为 final，如果在子类中定义的方法和
 
 statcit 关键字可以作用于变量、方法、语句块和内部类，将被修饰对象的行为提升到类，被修饰后通常称之为静态变量、静态方法、静态语句块和静态内部类。也可以用在导包时 import 后，导入静态方法和变量。
 
-###### 静态变量
+**静态变量**
 
 静态变量在内存中只存在一份，只在类初始化时赋值一次。
 
@@ -50,21 +50,21 @@ public class A {
 }
 ```
 
-###### 静态方法 
+**静态方法**
 
 静态方法在类加载的时候就存在了，它不依赖于任何实例，所以 static 方法必须实现，也就是说它不能是抽象方法（abstract）。
 
 静态方法不能直接访问该类的非 static 变量和方法。
 
-###### 静态语句块 
+**静态语句块**
 
 静态语句块在类初始化时运行一次。
 
-###### 静态内部类
+**静态内部类**
 
 内部类的一种，静态内部类不依赖外部类，且不能直接访问外部类的非 static 变量和方法。
 
-###### 静态导包
+**静态导包**
 
 ```java
 import static com.xxx.ClassName.StaticMethod
@@ -88,7 +88,7 @@ import static com.xxx.ClassName.StaticVariable
 
 ## 2. Object 的通用方法
 
-###### Object 方法概览
+**Object 方法概览**
 
 ```java
 //工具方法
@@ -119,7 +119,7 @@ protected void finalize() throws Throwable {}
 
 ### 2.1 equals()
 
-###### equals() 与 == 的区别 ######
+**equals() 与 == 的区别**
 
 - 对于基本类型，== 判断两个值是否相等，基本类型没有 equals() 方法。
 - 对于引用类型，== 判断两个实例是否引用同一个对象，而 equals() 判断引用的对象是否等价。
@@ -131,7 +131,7 @@ System.out.println(x.equals(y)); // true
 System.out.println(x == y);      // false
 ```
 
-###### 等价关系 ######
+**等价关系**
 
 （一）自反性
 
@@ -169,7 +169,7 @@ x.equals(y) == x.equals(y); // true
 x.euqals(null); // false;
 ```
 
-###### 实现
+**实现**
 
 - 检查是否为同一个对象的引用，如果是直接返回 true；
 - 检查是否是同一个类型，如果不是，直接返回 false；
@@ -260,7 +260,7 @@ ToStringExample@4554617c
 
 ### 2.4 clone()
 
-###### cloneable ######
+**cloneable**
 
 clone() 是 Object 的受保护方法，这意味着，如果一个类不显式去覆盖 clone() 就没有这个方法。
 
@@ -319,7 +319,7 @@ public class CloneExample implements Cloneable {
 
 应该注意的是，clone() 方法并不是 Cloneable 接口的方法，而是 Object 的一个 protected 方法。Cloneable 接口只是规定，如果一个类没有实现 Cloneable 接口又调用了 clone() 方法，就会抛出 CloneNotSupportedException。
 
-###### 深拷贝与浅拷贝 ######
+**深拷贝与浅拷贝**
 
 - 浅拷贝：拷贝实例和原始实例的引用类型引用同一个对象；
 - 深拷贝：拷贝实例和原始实例的引用类型引用不同对象。
@@ -507,7 +507,7 @@ public class AccessWithInnerClassExample {
 
 ### 3.2 抽象类与接口
 
-###### 抽象类 ######
+**抽象类**
 
 抽象类和抽象方法都使用 abstract 进行声明。抽象类一般会包含抽象方法，抽象方法一定位于抽象类中。
 
@@ -542,7 +542,7 @@ AbstractClassExample ac2 = new AbstractExtendClassExample();
 ac2.func1();
 ```
 
-###### 接口  ######
+**接口**
 
 接口是抽象类的延伸，在 Java 8 之前，它可以看成是一个完全抽象的类，也就是说它不能有任何的方法实现。
 
@@ -585,14 +585,14 @@ ie2.func1();
 System.out.println(InterfaceExample.x);
 ```
 
-###### 抽象类与接口的不同  ######
+**抽象类与接口的不同**
 
 - 从设计层面上看，抽象类提供了一种 IS-A 关系，那么就必须满足里式替换原则，即子类对象必须能够替换掉所有父类对象。而接口更像是一种 LIKE-A 关系，它只是提供一种方法实现契约，并不要求接口和实现接口的类具有 IS-A 关系。
 - 从使用上来看，一个类可以实现多个接口，但是不能继承多个抽象类。
 - 接口的字段只能是 static 和 final 类型的，而抽象类的字段没有这种限制。
 - 接口的方法只能是 public 的，而抽象类的方法可以由多种访问权限。
 
-###### 使用选择 ######
+**使用选择**
 
 使用抽象类：
 
@@ -626,12 +626,12 @@ System.out.println(InterfaceExample.x);
 
 ### 4.1 String, StringBuffer and StringBuilder
 
-###### 是否可变 ######
+**是否可变**
 
 - String 不可变
 - StringBuffer 和 StringBuilder 可变
 
-###### 是否线程安全 ######
+**是否线程安全**
 
 - String 不可变，因此是线程安全的
 - StringBuilder 不是线程安全的
@@ -641,19 +641,19 @@ System.out.println(InterfaceExample.x);
 
 ### 4.1 String 不可变的原因
 
-###### 可以缓存 hash 值 ######
+**可以缓存 hash 值**
 
 因为 String 的 hash 值经常被使用，例如 String 用做 HashMap 的 key。不可变的特性可以使得 hash 值也不可变，因此只需要进行一次计算。
 
-###### String Pool  ######
+**String Pool**
 
 如果一个 String 对象已经被创建过了，那么就会从 String Pool 中取得引用。只有 String 是不可变的，才可能使用 String Pool。
 
-###### 安全性 ######
+**安全性**
 
 String 经常作为参数，String 不可变性可以保证参数不可变。例如在作为网络连接参数的情况下如果 String 是可变的，那么在网络连接过程中，String 被改变，改变 String 对象的那一方以为现在连接的是其它主机，而实际情况却不一定是。
 
-###### 线程安全 ######
+**线程安全**
 
 String 不可变性天生具备线程安全，可以在多个线程中安全地使用。
 
@@ -710,7 +710,7 @@ System.out.println(s6 == s7);  		// true
 
 ### 5.2 自动装箱与自动拆箱 ###
 
-###### 自动装箱（Autoboxing）与自动拆箱（Unboxing） ######
+**自动装箱（Autoboxing）与自动拆箱（Unboxing）**
 
 装箱即是把 Java 的基本类型转化为对应的包装类型的过程，拆箱正好相反。    
 装箱调用的是对应包装类型的`valueOf`方法，拆箱调用的包装类型的`xxxValue`方法，如`intValue`,`doubleValue`等
@@ -730,7 +730,7 @@ double f = b;     //自动拆箱
 Integer g = a + b; //a和b分别自动拆箱，相加后在自动装箱赋值给g
 ```
 
-###### 自动装箱的缓存机制 ######
+**自动装箱的缓存机制**
 
 对于 byte,char,short,int,long 等整数类型来说，他们的装箱行为是一致的，默认当装箱数在闭区间 [-128,127] 内时，不会新建对象，而是返回缓存中的对象，这些缓存对象 jvm 在一启动就准备好了，这样做是为了方便重复调用和避免资源浪费。    
 如`Integer.valueOf`方法：
@@ -831,7 +831,446 @@ switch 不支持 long，是因为 swicth 的设计初衷是为那些只需要对
 
 > [Why can't your switch statement data type be long, Java?](https://stackoverflow.com/questions/2676210/why-cant-your-switch-statement-data-type-be-long-java)
 
-## 6. 反射
+## 6. 集合类
+
+### 6.1 Collection和Collections的差别
+
+`java.util.Collection` 是一个集合接口，Collection接口在Java类库中有非常多详细的实现。比如List、Set
+
+`java.util.Collections` 是针对集合类的一个帮助类，它提供了一系列的静态方法实现对各种集合的搜索、排序、线程安全化等操作。
+
+### 6.2 常用集合类和它们之间的比较
+
+#### 6.2.1 常用集合类
+
+**List**, 保证插入先后顺序的集合类
+
+* LinkedList  链表实现
+* ArrayList  可变数组实现
+* Vector   Synchronized 实现相当于线程同步的ArrayList
+* Stack  继承Vector，保证后进先出
+
+**Set**，保证数据唯一，无序
+
+* HashSet  HashMap没有value
+* LinkedHashSet  使用前后指针保证遍历按照插入顺序遍历
+* TreeSet  TreeMap没有value
+
+**Map**，键值对（所以不继承Collection）
+
+* HashMap  数组 + 链表 + 红黑树
+* LinkedHashMap  使用前后指针保证遍历按照插入顺序遍历
+* WeakHashMap Key使用弱引用
+* HashTable  Synchronized 实现线程同步的Map
+* Properties  继承自HashTable，Key和Value只能是String
+* TreeMap  Key排序，红黑树实现，Key必须实现Comparable或传入自定义Comparator
+
+#### 6.2.2 ArrayList 与 vector
+
+相同点：都实现了List接口 ，都相当于动态数组。
+
+不同点：
+
+* ArrayList 默认扩容0.5倍，Vector 默认扩容一倍
+* ArrayList 线程不安全，Vector 使用 Synchronized 实现线程安全
+
+#### 6.2.3 HashMap 与 HashTable
+
+不同点：
+
+* HashMap 支持 null 键和 null 值，HashTable 不支持（因为HashMap把null 的哈希值设为了0）
+* HashMap线程不安全，HashTable 使用 Synchronized 实现线程安全
+
+### 6.3 将线程不安全的集合转为线程安全的集合
+
+```java
+list = Collections.synchronizedList(list);	//转为内部用synchronized关键字实现的SynchronizedList类，下同
+set = Collections.synchronizedSet(set);
+map = Collections.synchronizedMap(map);
+```
+
+## 7. 多线程与并发
+
+### 7.1 一些相关概念和关键字
+
+**可重入锁**
+
+线程可以进入任何一个它已经拥有的锁所同步着的代码块。
+
+Java中常用的可重入锁
+
+- **`synchronized`** 只能随机唤醒或全部唤醒，等待获取锁时不能中断，只能是不公平锁
+
+  锁膨胀过程为 无锁 -> 偏向锁 -> 轻量锁（自旋）-> 重量锁，且不可逆
+
+- **`java.util.concurrent.locks.ReentrantLock`** 可以分组唤醒，需要手动加锁解锁，等待时可以被中断，可以指定是否公平锁
+
+**可见性**
+
+当一个线程修改一个值时，这个值是否能立即被其他线程读到。
+
+Java保证可见性的关键字：`volatile`（详见[JAVA 虚拟机 - Java 内存模型](JVM)）
+
+**synchronized**
+
+synchronized 可以锁定一个对象或一个类。
+
+* 锁定对象：当 synchronize 作用在一个普通对象或一个非静态方法（相当于synchronize(this) {//整个方法体}）时
+* 锁定类：当 synchronize 作用在一个类或静态方法（相当于synchronize(ClassName.class) {//整个方法体}）时
+
+需要注意的是，类的锁和该类对象的锁并不冲突，或者说没有关系，互不影响。也就是说，当一个线程锁定了某个类，其他线程仍可以锁定该类的某个对象，反之亦然。
+
+在 synchronized 内部可以通过 Object.wait() 释放锁，同时线程在当前位置休眠，直到其他线程调用 Object.notify() 唤醒该线程，才能继续锁定该对象，并继续执行。Object.notify() 并不会立即释放锁，而是在当前线程退出 synchronized 块后，随机选择一个 wait 线程去唤醒。Object.notifyAll() 会唤醒所有 wait 线程， 被唤醒的线程按照随机的顺序执行。
+
+**Object.wait() 与 Thread.sleep()**
+
+* wait() 会释放锁然后进入等待锁定队列，sleep() 不释放锁
+* wait() 必须在同步块中使用，sleep() 可以在任意位置使用
+
+>如果某个线程拥有某个或某些对象的同步锁，那么在调用了wait()后，这个线程就会释放它持有的所有同步资源，而不限于这个被调用了wait()方法的对象。 
+>
+>Thread.sleep() 表示让一个线程进入睡眠状态，等待一定的时间之后，自动醒来进入到可运行状态，不会马上进入运行状态，因为线程调度机制恢复线程的运行也需要时间，一个线程对象调用了sleep方法之后 
+
+### 7.2 并发容器
+
+**使用 synchronized 实现同步的类**
+
+Timer，TimerTask，
+Vector，Stack，HashTable，
+SynchronizedList，SynchronizedSet，SynchronizedMap
+StringBuffer
+
+**原子类 Atomicxxx — 包装类的线程安全类** 
+
+如AtomicLong，AtomicInteger等等 
+Atomicxxx 是通过Unsafe 类的native方法（CAS）实现线程安全的
+
+**ConcurrentHashMap**
+
+Java1.7和1.6分段锁实现的线程安全的HashMap，能够有效的进行高并发的访问。对于`size()`和`isEmpty()`等需要访问整个哈希表的操作采取了较弱的语义。
+
+1.8基本完全重写了 ConcurrentHashmap，大量使用CAS操作进行属性的修改，实现上也和分段锁有很大不同，主要有以下几点：
+
+1. 使用sizeCtl控制扩容和初始化，负值 -N 表示当前 N - 1 个线程正在进行扩容，-1 表示正在初始化，0 表示未初始化，正数表示初始化完成，大小为容量的0.75倍
+2. 不采用segment而采用node，锁住node（使用 synchronized）来实现减小锁粒度。
+3. 插入时，若正在扩容则辅助扩容，当前hash位为null，则直接CAS插入，否则对当前hash位node加 synchronized 锁，再插入
+4. 读取时，直接读取
+5. 扩容时的rehash操作，使用forwad结点标记实现并发扩容
+6. size 方法采用动态计算
+
+> 分段锁原理
+>
+> ConcurrentHashMap由多个Segment构成，每个Segment都对于一段哈希值，包含一张哈希表。每次操作只将操作数据所属的Segment使用ReentrantLock锁起来，从而避免将整个锁住。 
+
+**ConcurrentSkipListMap / ConcurrentSkipListSet ** 
+
+使用跳表实现的有序高并发Map。
+
+**CopyOnWriteArrayList / CopyOnWriteArraySet**
+
+只对写操作同步，读操作可能会读到稍旧的数据副本。适用于读多写少，数据量不大的操作。修改容器的代价是昂贵的，因此建议批量增加和删除。线程安全的实现：
+
+1. 使用volatile修饰数组引用：确保数组引用的内存可见性。
+2. 写操作使用ReentrantLock同步，先复制数组，再修改，再将修改后的数组替换当前数组
+
+CopyOnWriteArraySet 去重使用的是遍历比较。
+
+**Queue / BlockingQueue**
+
+- ConcurrentLinkedQueue：线程安全的无界队列。底层采用单链表。支持FIFO。
+- ConcurrentLinkedDeque：线程安全的无界双端队列。底层采用双向链表。支持FIFO和FILO。
+- ArrayBlockingQueue：数组实现的阻塞队列。
+- LinkedBlockingQueue：链表实现的阻塞队列。
+- LinkedBlockingDeque：双向链表实现的双端阻塞队列。
+
+### 7.3 同步工具类
+
+**阻塞队列**
+
+阻塞队列提供可阻塞的put和take方法，以及支持定时的offer和poll方法。    
+当队列满时，put方法会阻塞自己直到有空间可用；当队列空时，take方法会阻塞自己直到有元素可取。
+
+eg：LinkedBlockingQueue, ArrayBlockingQueue
+
+**闭锁**
+
+闭锁是一种同步工具类，它可以一直等待需要发生的事件，直到满足要求后再让指定线程执行。   
+`CountDownLatch`是一种灵活的闭锁实现，它可以使一个线程或多个线程等待一组事件发生，内部维护了一个方法递减计数器，每当一个事件发生就调用`countDown()`方法递减，当递减为零时说明所有等待事件都已发生。如果计数器一直没有递减到零，那么`await()`会一直等到或者线程中断，或者等待超时。   
+`FutureTask`也是一种闭锁，用来获取线程执行的返回值（通过Runable），使用方法如下：
+
+```
+FutureTask<T> f = new FutureTask<T>(new Callable<T>() {
+        public T call() throws SomeException {
+            //dosomethion
+            return t;
+        }
+    })
+
+Thread t = new Thread(f);
+t.start();
+f.get(); //阻塞直到callable返回结果（正常，异常）
+
+
+```
+
+**信号量**
+
+信号量控制并发过程中资源的使用量，使用`Semaphore`实现。
+
+**栅栏**
+
+栅栏类似于闭锁，也能阻塞一组线程直到某个事件发生，与闭锁不同的是所有线程必须都到了栅栏的位置才能继续执行。   
+`CyclicBarrier`可以让一组线程反复在栅栏位置集合，当线程到达栅栏位置时会调用await方法，阻塞直到所有线程到达栅栏，然后栅栏打开并返回给每个线程唯一的索引号后重置。若await等待超时或某个线程被中断，就会认为栅栏被打破，从而抛出`BrokenBarriarException`。   
+`Exchanger`是一种两方栅栏，各方在栅栏上交换数据。如当一个线程向缓存区写入数据，另一个线程从缓冲区读取数据，可以通过`Exchanger`汇合，将满的缓冲区与空的缓冲区交换。
+
+### 7.4 线程
+
+**新建线程的三种方法**
+
+1. 继承 Thread() 重写 run() 方法
+
+2. 实现 Runable 接口，然后传入Thread 构造函数
+
+3. 使用 Callable 和 Future 接口创建线程。具体是先实现 Callable 接口，再用 FutureTask 类来包装 Callable实现类的对象，再把 FutureTask对象传入Thread 构造函数。示例：
+
+   ```java
+   Callable<Integer> myCallable = new Callable<Integer>() {
+       @Override
+       public Integer call() throws Exception {
+           return 1;
+       }
+   };
+   FutureTask<Integer> ft = new FutureTask<Integer>(myCallable);
+   Thread thread = new Thread(ft);
+   ```
+
+**Thread类的方法**
+
+- run()，同步调用，和调用正常方法没有区别。
+
+- start()，启动线程
+
+- join()，同步线程，如`t.join()`，主线程阻塞等到t线程调用完成后才向后执行
+
+- interrupt()，中断一个处于sleep()/wait()/join()阻塞状态的线程，如`t.join()`，会将 t 线程中断标记设为 true，同时再 t 线程内部抛出 InterruptedException 异常。将 InterruptedException 放在适当的位置就能终止线程，形式如下： 
+
+  ```java
+  try {
+      object.wait();
+  } catch (InterruptedException ie) {  
+      return;
+  }
+  ```
+
+- yield()，线程让步，将当前线程由运行转为就绪态
+
+### 7.5 线程池
+
+**ThreadPoolExecutor**
+
+ThreadPoolExecutor 的完整构造方法的签名是：
+
+```
+ThreadPoolExecutor(
+    int corePoolSize, // 池中所保存的线程基本线程数，包括空闲线程。
+    int maximumPoolSize, // 池中允许的最大线程数
+    long keepAliveTime, // 当线程数大于基本大小时，此为终止前多余的空闲线程等待新任务的最长时间
+    TimeUnit unit, // 参数的时间单位
+    BlockingQueue<Runnable> workQueue, // 执行前用于保持任务的队列。将交由execute方法
+    ThreadFactory threadFactory, // 执行程序创建新线程时使用的工厂
+    RejectedExecutionHandler handler // 拒绝策略，由于超出线程范围和队列容量而使执行被阻塞时所使用的处理程序
+    ) 
+```
+
+BlockingQueue 可以使用无界队列，那么任务队列可以无限制的增加；也可以使用有界队列，可以避免资源耗尽。   
+当使用有界队列当队列满时就会调用 handler 执行拒绝策略，拒绝策略有四种：
+
+- 丢弃策略，有两种，一种为`DiscardPolicy`，方式是丢弃自己；另一种为`DiscardOldestPolicy`，方式是丢弃任务队列的头一个，自己加入队尾。
+- 异常策略，称之为`AbortPolicy`，抛出`RejectedExecutionException`拒绝执行异常。
+- 执行策略，称之为`CallerRunsPolicy`，由调用者线程去执行。
+
+**Executors**
+
+还可以通过Executors静态方法创建线程池：
+
+- **`Executors.newSingleThreadExecutor`**  创建一个单线程的ExecutorService，如果这个线程异常结束会创建另一个线程替代
+- **`Executors.newFixedThreadPool`**  创建一个固定大小的线程池，每次任务创建一个线程，直到达到最大数量。若某个线程异常结束会创建另一个线程替代
+- **`Executors.newScheduledThreadPool`**  也是固定大小的线程池，但可以以延迟或定时的方式执行任务
+- **`Executors.newCachedThreadPool`**  创建一个可缓存的线程池，会回收空闲线程，当需求很大时也可以无限制新建线程
+
+`Executor`的`execute`方法用来执行实现`Runable`接口的方法；继承了`Executor`的`ExecutorService`可以用`submit`方法执行`Runable`和`Callable`接口的方法，使用`Future<?>`保存返回结果。`Future<?>`的`get`方法为一种阻塞等待方法。
+
+`CompletionService<>`接口用来完成并行计算任务。`ExecutorCompletionService<>`使用了阻塞队列来完成任务，每次调用它的`submit`方法可以添加一项任务，之后可以通过`take`方法获取这些任务的`Futrue<>`结果。
+
+### 7.6 锁
+
+**CAS**
+
+`Compare And Set`，由JNI实现，操作系统底层控制对某一块内存操作的原子性。
+
+**乐观锁与悲观锁**
+
+乐观锁，每次操作都认为不发生冲突，直到提交阶段进行验证。失败则重试。有脏读问题。
+悲观锁，每次操作都认为会发生冲突，每次操作加锁
+
+**自旋锁**
+
+线程的阻塞和唤醒切换CPU从用户态转为核心态，频繁的切换会加重CPU的负担，自旋锁是时线程再等待的过程中执行一些无意义的循环，直到等待时间发生。但应该避免长时间的忙等待。
+
+**阻塞锁**
+
+**ReentrantReadWriterLock**
+
+读写锁，读锁可重入读锁，写锁不可被重入，写锁可降级为读锁。
+
+**synchronized 相关锁**
+
+* **偏向锁**
+
+  偏向锁主要解决的是提升无竞争状态下的锁性能。一旦线程第一次获得了监视对象，之后让监视对象“偏向”这个线程，之后的多次调用则可以避免CAS操作
+
+* **轻量级锁**
+
+  正常CAS获取偏向锁，若获取失败，继续自旋获取，超过一定次数，膨胀为重量级锁
+
+* **重量级锁**
+
+  重量级锁，就是让争抢锁的线程从用户态转换成内核态。让cpu借助操作系统进行线程协调。
+
+## 8. IO 与 NIO
+
+### 8.1 流
+
+Java流分布字节流和字符流两种，它们的主要区别为：
+
+1. 字节流读取的时候，读到一个字节就返回一个字节；字符流使用了字节流读到一个或多个字节（中文对应的字节数是两个，在UTF-8码表中是3个字节）时。先去查指定的编码表，将查到的字符返回。
+2. 字节流可以处理所有类型数据，如：图片，MP3，AVI视频文件，而字符流只能处理字符数据。只要是处理纯文本数据，就要优先考虑使用字符流，除此之外都用字节流。
+
+**字节流**
+
+* FileInputStream/FileOutputStream：此类用于从本地文件系统中读取文件内容。
+
+  ```java
+  //打开一个到实际文件的连接来创建一个FileInputStream，该文件通过文件系统中的File对象file指定。
+  FileInputStream/FileOutputStream(File file)
+      
+  //打开一个到实际文件的连接来创建一个FileInputStream，该文件通过文件系统中的路径名name指定。
+  FileInputStream/FileOutputStream(String name)	
+  ```
+
+* BufferedInputStream/BufferedOutputStream：此类本身带有一个缓冲区，在读取数据时，先放到缓冲区中，可以减少对数据源的访问，提高运行的效率。 
+
+  ```java
+  //创建一个BufferedInputStream并保存其参数，即输入流in，以便将来使用。
+  BufferedInputStream/BufferedOutputStream(InputStream in)
+  
+  //创建一个具有指定缓冲区大小的BufferedInputStream并保存其参数，即输入流in，以便将来使用。
+  BufferedInputStream/BufferedOutputStream(InputStream in,int size)
+  ```
+
+* DataInputStream/DataOutputStream:该类提供一些基于多字节读取方法，从而可以读取基本数据类型的数据。 
+
+  ```java
+  //使用指定的底层InputStream创建一个DataInputStream。
+  DataInputStream/DataOutputStream(InputStream in)
+  ```
+
+**字符流**
+
+* FileReader/FileWriter：用来读取字符文件的便捷类。此类的构造方法假定默认字符编码和默认字节缓冲区大小都是适当的。
+
+  ```java
+  //在给定从中读取数据的File的情况下创建一个新的FileReader。
+  FileReader/FileWriter(File file)
+  
+  //在给定从中读取数据的文件名的情况下创建一个新的FileReader。
+  FileReader/FileWriter(String fileName)
+  ```
+
+* BufferedReader/BufferedWriter：类是Reader类的子类，为Reader对象添加字符缓冲器，为数据输入分配内存存储空间，存取数据更为有效。
+
+  ```java
+  //创建一个使用默认大小输入缓冲区的缓冲字符输入流。
+  BufferedReader/BufferedWriter(Reader in)
+      
+  //创建一个使用指定大小输入缓冲区的缓冲字符输入流。
+  BufferedReader/BufferedWriter(Reader in,int sz)
+  ```
+
+### 8.2 什么是NIO
+
+首先来讲一下传统的IO和NIO的区别，传统的IO又称BIO，即阻塞式IO，NIO就是非阻塞IO了。还有一种[AIO](http://stevex.blog.51cto.com/4300375/1284437)就是异步IO。NIO可以自动控制阻塞或非阻塞。
+
+Java IO的各种流是阻塞的。这意味着，当一个线程调用read() 或 write()时，该线程被阻塞，直到有一些数据被读取，或数据完全写入。该线程在此期间不能再干任何事情了。 Java NIO的非阻塞模式，使一个线程从某通道发送请求读取数据，但是它仅能得到目前可用的数据，如果目前没有数据可用时，就什么都不会获取。而不是保持线程阻塞，所以直至数据变的可以读取之前，该线程可以继续做其他的事情。 非阻塞写也是如此。一个线程请求写入一些数据到某通道，但不需要等待它完全写入，这个线程同时可以去做别的事情。 线程通常将非阻塞IO的空闲时间用于在其它通道上执行IO操作，所以一个单独的线程现在可以管理多个输入和输出通道（channel）。
+
+### 8.3 NIO三大核心
+
+#### 8.3.1 Buffer
+
+在NIO中数据交互不再像IO机制那样使用流，而是使用Buffer（缓冲区） 。NIO下客户端向服务端传送数据过程可以描述为：客户端写数据到buffer，buffer通过channel传数据到服务器buffer，服务器从buffer读数据。
+
+buffer实际上是一个容器，一个连续数组，它通过几个变量来保存这个数据的当前位置状态： 
+
+1. capacity：容量，缓冲区能容纳元素的数量 
+2. position：当前位置，是缓冲区中下一次发生读取和写入操作的索引，当前位置通过大多数读写操作向前推进
+3. limit：界限，是缓冲区中最后一个有效位置之后下一个位置的索引 
+
+![clipboard.png](JavaBasics.assets/2713359053-5a2a2c74d9ca3_articlex.png) 
+
+**主要buffer实现类：**
+
+CharBuffer，ByteBuffer ，ShortBuffer，IntBuffer，LongBuffer，FloatBuffer，DoubleBuffer，还有个 MappedByteBuffer，用于表示内存映射文件。
+
+**常用方法：**
+
+```java
+.flip()    //反转写buffer为读buffer，将limit设置为position，然后position重置为0，返回对缓冲区的引用
+.clear()   //清空调用缓冲区并返回对缓冲区的引用
+```
+
+#### 8.3.2 Channal
+
+共有四种通道：
+
+* FileChannel：作用于IO文件流
+
+  可以通过下面方法获取文件流通道
+
+  ```java
+  FileOutputStream("data.txt").getChannel();	//只写
+  FileInputStream("data.txt").getChannel();	//只读
+  RandomAccessFile("data.txt", "rw").getChannel();	//读写
+  ```
+
+  
+
+* DatagramChannel：作用于UDP协议 
+
+* SocketChannel：作用于TCP协议 
+
+* ServerSocketChannel：作用于TCP协议 
+
+#### 8.3.3 Selector
+
+选择器是NIO的核心，它是channel的管理者。通过执行select()阻塞方法，监听是否有channel准备好。一旦有数据可读，此方法的返回值是SelectionKey的数量。
+
+所以服务端通常会死循环执行select()方法，直到有channl准备就绪，然后开始工作。每个channel都会和Selector绑定一个事件，然后生成一个SelectionKey的对象。
+
+需要注意的是：
+
+* channel和Selector绑定时，channel必须是非阻塞模式
+* FileChannel不能切换到非阻塞模式，因为它不是套接字通道，所以FileChannel不能和Selector绑定事件
+
+在NIO中一共有四种事件：
+
+1. SelectionKey.OP_CONNECT：连接事件
+2. SelectionKey.OP_ACCEPT：接收事件
+3. SelectionKey.OP_READ：读事件
+4. SelectionKey.OP_WRITE：写事件
+
+## 9. 反射与动态代理
+
+### 9.1 反射
 
 每个类都有一个  **Class**  对象，包含了与类有关的信息。当编译一个新类时，会产生一个同名的 .class 文件，该文件内容保存着 Class 对象。
 
@@ -863,7 +1302,107 @@ Reflection is powerful, but should not be used indiscriminately. If it is possib
 
 > [Trail: The Reflection API](https://docs.oracle.com/javase/tutorial/reflect/index.html) <br />[深入解析 Java 反射（1）- 基础](http://www.sczyh30.com/posts/Java/java-reflection-1/)
 
-## 7. 异常
+### 9.2 静态代理
+
+静态代理就是手动实现对一个类的增强，可以让被代理类作为代理类的成员变量，这样就可以控制被代理类的方法前处理后处理。
+
+```java
+public class UserServiceProxy{ 
+
+    private UserService userService; 
+
+    public UserServiceProxy(UserService userService) { 
+        this.userService = userService; 
+    } 
+
+    public void addUser() { 
+        
+        //前处理; 
+        userService.addUser(); 
+        //后处理
+    
+    } 
+} 
+```
+
+### 9.3 动态代理
+
+静态代理只能对一个类代理，当需要对大量的代理时就可以用动态代理。
+
+#### 9.3.1 JDK动态代理
+
+JDK自带的代理模式，要求被代理类必须实现接口。生成的代理类和被代理类有共同的接口。具体操作如下：
+
+```java
+public class MyJDKProxy implements InvocationHandler {  
+    
+    public static void main(String[] args) {
+        
+        final Object targetObject;//需要代理的目标对象
+        
+        //实现一个InvocationHandler
+        InvocationHandler handler = new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, 
+                                 Method method, Object[] args) throws Throwable {
+                //调用前处理
+            	Object ret = method.invoke(targetObject, args);  //执行原method
+                //调用后处理
+        		return ret;
+            }
+        }
+        
+        //创建代理对象
+        Object proxyObject = Proxy.newProxyInstance(
+            targetObject.getClass().getClassLoader(),  
+            targetObject.getClass().getInterfaces(), //必须要有接口
+            handler);
+        
+    }
+  
+} 
+```
+
+#### 9.3.2 CGLIB动态代理
+
+cglib生成目标对象的子类为代理类。具体实现如下：
+
+```java
+public class MyCGlibProxy implements InvocationHandler {  
+    
+    public static void main(String[] args) {
+        
+        final Object targetObject;//需要代理的目标对象
+        
+        //实现一个MethodInterceptor
+        MethodInterceptor inteceptor = new MethodInterceptor() {
+            @Override
+            public Object intercept(Object proxy, Method method, 
+                                    Object[] args, 
+                                    MethodProxy methodProxy) throws Throwable {
+                //调用前处理
+            	Object ret = method.invoke(targetObject, args);  //执行原method
+                //调用后处理
+        		return ret;
+            }
+        }
+        
+        //创建代理对象
+        Enhancer enhancer = new Enhancer();  
+        enhancer.setSuperclass(targetObject.getClass());  
+        enhancer.setCallback(inteceptor);  
+        Object proxyObject = enhancer.create()
+    }
+  
+}
+```
+
+两种代理方式的区别：
+
+1. JDK代理的类必须实现接口，CGlib代理类不能是final类，方法不能是final方法
+2. JDK代理生成的类和被代理类有共同的接口，是Proxy的子类（所以JDK不能生成代理类的子类）；CGLib代理生成的类是被代理类的子类
+
+## 10. 异常
 
 Throwable 可以用来表示任何可以作为异常抛出的类，分为两种： **Error**  和 **Exception**。其中 Error 用来表示 JVM 无法处理的错误，Exception 分为两种：
 
@@ -876,7 +1415,7 @@ Throwable 可以用来表示任何可以作为异常抛出的类，分为两种�
 
 > [Java 入门之异常处理](https://www.tianmaying.com/tutorial/Java-Exception) <br />[Java 异常的面试问题及答案 -Part 1](http://www.importnew.com/7383.html)
 
-## 8. 泛型
+## 11. 泛型
 
 ```java
 public class Box<T> {
@@ -889,21 +1428,21 @@ public class Box<T> {
 
 > [Java 泛型详解](https://www.ziwenxie.site/2017/03/01/java-generic/)<br />[10 道 Java 泛型面试题](https://cloud.tencent.com/developer/article/1033693)
 
-## 9. 注解
+## 12. 注解
 
 Java 注解是附加在代码中的一些元信息，用于一些工具在编译、运行时进行解析和使用，起到说明、配置的功能。注解不会也不能影响代码的实际逻辑，仅仅起到辅助性的作用。
 
 > [注解 Annotation 实现原理与自定义注解例子](https://www.cnblogs.com/acm-bingzi/p/javaAnnotation.html)
 
-## 10. 特性
+## 13. 特性
 
-### 10.1 面向对象三大特性
+### 13.1 面向对象三大特性
 
 > [封装、继承、多态](https://github.com/CyC2018/Interview-Notebook/blob/master/notes/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E6%80%9D%E6%83%B3.md#%E5%B0%81%E8%A3%85%E7%BB%A7%E6%89%BF%E5%A4%9A%E6%80%81)
 
-### 10.2 Java 各版本的新特性
+### 13.2 Java 各版本的新特性
 
-###### New highlights in Java SE 8 ######
+**New highlights in Java SE 8**
 
 1. Lambda Expressions
 2. Pipelines and Streams
@@ -915,7 +1454,7 @@ Java 注解是附加在代码中的一些元信息，用于一些工具在编译
 8. Parallel operations
 9. PermGen Error Removed
 
-###### New highlights in Java SE 7 ######
+**New highlights in Java SE 7**
 
 1. Strings in Switch Statement
 2. Type Inference for Generic Instance Creation
@@ -928,7 +1467,7 @@ Java 注解是附加在代码中的一些元信息，用于一些工具在编译
 
 > [Difference between Java 1.8 and Java 1.7?](http://www.selfgrowth.com/articles/difference-between-java-18-and-java-17)<br />[Java 8 特性 ](http://www.importnew.com/19345.html)
 
-### 10.3 Java 与 C++ 的区别
+### 13.3 Java 与 C++ 的区别
 
 Java 是纯粹的面向对象语言，所有的对象都继承自 java.lang.Object，C++ 为了兼容 C 即支持面向对象也支持面向过程。
 
@@ -948,7 +1487,7 @@ Java 是纯粹的面向对象语言，所有的对象都继承自 java.lang.Obje
 
 > [What are the main differences between Java and C++?](http://cs-fundamentals.com/tech-interview/java/differences-between-java-and-cpp.php)
 
-### 10.4 JRE or JDK
+### 12.4 JRE or JDK
 
 - JRE is the JVM program, Java application need to run on JRE.
 - JDK is a superset of JRE, JRE + tools for developing java programs. e.g, it provides the compiler "javac"
