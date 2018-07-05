@@ -34,6 +34,12 @@
 
 :two: [Linux 基础](ProgrammingNotes/LinuxBasics.md)
 
+:three: [Linux Socket](ProgrammingNotes/LinuxSocket.md)
+
+## 计算机网络 🍡
+
+:one: [计算机网络](ProgrammingNotes/NetworkOfComputer.md)
+
 ## 分布式 :dango:
 
 :one: [分布式基础](ProgrammingNotes/DistributedSystem.md)
