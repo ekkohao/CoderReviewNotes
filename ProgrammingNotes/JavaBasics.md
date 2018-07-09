@@ -893,6 +893,21 @@ map = Collections.synchronizedMap(map);
 
 ### 7.1 一些相关概念和关键字
 
+**同步与异步，阻塞与非阻塞**
+
+* **同步**：调用者主动等待调用结果
+* **异步**：调用者不会立刻得到结果，而是通过回调或通知等处理调用结果。
+* **阻塞**：调用函数不会立即返回，而是等到结果完成才返回。即该调用会阻塞当前线程并挂起
+* **非阻塞**：调用函数会立刻返回一个状态，表面当前的调用结果，不会挂起当前线程。
+
+同步阻塞：主线程调用一个阻塞函数。
+
+同步非阻塞：主线程调用一个非阻塞函数，需要隔段时间自己再次去轮询这个函数是否有结果。
+
+异步阻塞：主线程开启子线程，子线程进行同步阻塞调用。
+
+异步非阻塞：主线程开启子线程，子线程进行同步非阻塞调用。
+
 **可重入锁**
 
 线程可以进入任何一个它已经拥有的锁所同步着的代码块。
@@ -1224,6 +1239,7 @@ CharBuffer，ByteBuffer ，ShortBuffer，IntBuffer，LongBuffer，FloatBuffer，
 **常用方法：**
 
 ```java
+.allocate(int size) //类方法，申请指定大小的buffer
 .flip()    //反转写buffer为读buffer，将limit设置为position，然后position重置为0，返回对缓冲区的引用
 .clear()   //清空调用缓冲区并返回对缓冲区的引用
 ```
@@ -1242,19 +1258,36 @@ CharBuffer，ByteBuffer ，ShortBuffer，IntBuffer，LongBuffer，FloatBuffer，
   RandomAccessFile("data.txt", "rw").getChannel();	//读写
   ```
 
-  
-
 * DatagramChannel：作用于UDP协议 
 
 * SocketChannel：作用于TCP协议 
 
+  ```java
+  SocketChannel channel = SocketChannel.open();
+  channel.connect(new InetSocketAddress("127.0.0.1",8000));
+  ```
+
 * ServerSocketChannel：作用于TCP协议 
+
+  ```java
+  ServerSocketChannel channel = ServerSocketChannel.open();
+  channel.bind(new InetSocketAddress(8000));
+  ```
 
 #### 8.3.3 Selector
 
 选择器是NIO的核心，它是channel的管理者。通过执行select()阻塞方法，监听是否有channel准备好。一旦有数据可读，此方法的返回值是SelectionKey的数量。
 
-所以服务端通常会死循环执行select()方法，直到有channl准备就绪，然后开始工作。每个channel都会和Selector绑定一个事件，然后生成一个SelectionKey的对象。
+所以服务端通常会死循环执行select()方法，直到有channel准备就绪，然后开始工作。每个channel都会和Selector绑定一个事件，然后生成一个SelectionKey的对象。
+
+```java
+// 注册channel的某个事件到selector
+SelectionKey sk = channel.registry(selector, SelctionKey.OP_XXXX)；
+
+sk.attach(obj);//绑定一个对象，方便事件发送时使用
+
+selector.select();//阻塞监听所有的注册事件，也可以传一个超时参数
+```
 
 需要注意的是：
 
@@ -1264,9 +1297,25 @@ CharBuffer，ByteBuffer ，ShortBuffer，IntBuffer，LongBuffer，FloatBuffer，
 在NIO中一共有四种事件：
 
 1. SelectionKey.OP_CONNECT：连接事件
-2. SelectionKey.OP_ACCEPT：接收事件
+2. SelectionKey.OP_ACCEPT：接收事件，服务端接收到了一个新的客户端连接
 3. SelectionKey.OP_READ：读事件
 4. SelectionKey.OP_WRITE：写事件
+
+### 8.4 BIO-NIO-AIO
+
+**BIO**
+
+每当有一个socket连接时，启用一个线程监听它的read()方法。所以当连接非常多的时候，所需要的线程数就会很大，而操作系统能够创建线程的总数是有一定限制的。
+
+**NIO**
+
+主要解决BIO的大并发问题，主要是使用IO多路复用来监测所有的连接，当有指定事件发生时才启用一个线程去处理。
+
+> IO多路复用参见 [Linux基础](linux)
+
+**AIO**
+
+A是异步的单词首字母，主要是操作系统协助把buffer到驱动缓存的数据进行异步拷贝，当拷贝完成，通过回调函数通知处理线程。
 
 ## 9. 反射与代理
 
