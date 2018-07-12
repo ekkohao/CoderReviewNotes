@@ -1183,12 +1183,16 @@ Java流分布字节流和字符流两种，它们的主要区别为：
   BufferedInputStream/BufferedOutputStream(InputStream in,int size)
   ```
 
-* DataInputStream/DataOutputStream:该类提供一些基于多字节读取方法，从而可以读取基本数据类型的数据。 
+* DataInputStream/DataOutputStream：该类提供一些基于多字节读取方法，从而可以读取基本数据类型的数据。 
 
   ```java
   //使用指定的底层InputStream创建一个DataInputStream。
   DataInputStream/DataOutputStream(InputStream in)
   ```
+
+* ObjectInputStream/ObjectOutputStream： 用来输入输出序列化对象
+
+输入流都是对FilterInputStream的装饰。
 
 **字符流**
 
@@ -1546,10 +1550,33 @@ Java 是纯粹的面向对象语言，所有的对象都继承自 java.lang.Obje
 ### 14.1 类重名问题
 
 * 如果精确导入两个重名类，则编译错误
-* 如果精确导入一个类，该类再本包或其他导入包有重名，那么使用精确导入的类
+* 如果精确导入一个类，无论该类是否在本包或其他导入包有重名，都使用精确导入的类
 * 如果使用`.*`导入类，
   * 本包中含有和导入包的重名类，则使用本包的类
   * 导入包之间含有重名类，且本包不含有，则编译报错
+
+### 14.2 ThreadLocal的内存泄露问题
+
+**造成泄漏原因**
+
+ThreadLocal 的实现是这样的：每个 Thread 维护一个 ThreadLocalMap 映射表，这个映射表的 key 是 ThreadLocal实例本身，value 是真正需要存储的 Object。 
+
+而 ThreadLocalMap 使用 ThreadLocal的弱引用作为key，如果持有 ThreadLocal 的对象被销毁了，即  ThreadLocal 的强引用没了，那么系统 GC 的时候，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap 中就会出现 key 为 null 的 Entry，就没有办法访问这些 key 为 null 的 Entry 的 value，如果当前线程再迟迟不结束的话，这些 key 为 null 的 Entry 的 value 就会一直存在一条强引用链：Thread Ref -> Thread -> ThreaLocalMap -> Entry -> value永远无法回收，造成内存泄漏。
+
+其实，ThreadLocalMap 的设计中已经考虑到这种情况，也加上了一些防护措施：在 ThreadLocal 的get(),set(),remove() 的时候都会清除线程 ThreadLocalMap 里所有 key 为 null 的 value。但仍然有可能发生内存泄漏。
+
+**为什么使用弱引用**
+
+* key 使用强引用：引用的ThreadLocal的对象被回收了，但是ThreadLocalMap还持有ThreadLocal的强引用，如果没有手动删除，ThreadLocal不会被回收，导致Entry内存泄漏。
+* key 使用弱引用：引用的ThreadLocal的对象被回收了，由于ThreadLocalMap持有ThreadLocal的弱引用，即使没有手动删除，ThreadLocal也会被回收。value在下一次ThreadLocalMap调用set,get，remove的时候会被清除。
+
+比较两种情况，我们可以发现：由于 ThreadLocalMap 的生命周期跟Thread一样长，如果都没有手动删除对应key，都会导致内存泄漏，但是使用弱引用可以多一层保障：弱引用ThreadLocal不会内存泄漏，对应的value在下一次ThreadLocalMap调用set,get,remove的时候会被清除。
+
+因此，ThreadLocal内存泄漏的根源是：由于ThreadLocalMap的生命周期跟Thread一样长，如果没有手动删除对应key就会导致内存泄漏，而不是因为弱引用。
+
+**怎么样避免**
+
+每次使用完 Threadlocal，即使调用 remove() 方法。
 
 ## 参考资料
 
