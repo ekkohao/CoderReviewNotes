@@ -46,17 +46,23 @@
 
 ## 数据库 :floppy_disk:
 
-* [数据库基础及常用数据库](ProgrammingNotes/DatabaseBasics.md)
+* [数据库基础](ProgrammingNotes/DatabaseBasics.md)
+* MySQL
+* Redis
 
 ## 分布式 :sweat_drops:
 
 * [分布式基础](ProgrammingNotes/DistributedSystem.md)
-* 消息队列
+* [Redis](ProgrammingNotes/Redis.md)
+* kafka
+* rocketMQ
+* zookeeper
 
 ## 大数据 :baby_chick:
 
 * Hadoop
-* ...
+* Spark
+* Hbase
 
 ## 机器学习 :man_astronaut:
 

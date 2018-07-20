@@ -764,3 +764,81 @@ SPFA算法也是一种连续最短路算法，它对Bellman-Ford进行了队列�
 
 ## 8. 动态规划 ##
 
+动态规划实质：找转移方程
+
+### 8.1 背包问题
+
+#### 8.1.1 0-1背包问题
+
+**问题描述**
+
+给定 n 种物品和一个容量为 C 的背包，物品 i 的重量是 $w_i$，其价值为 $v_i$ 。
+
+问：应该如何选择装入背包的物品，使得装入背包中的物品的总价值最大？
+
+**解析**
+
+$dp[v][i]$ 表示前i种物品可以达到的最大价值，那么有转移方程
+
+$$ dp[v][i] = max(dp[v - v_i][i - 1] +v_i, dp[v][i - 1]$$
+
+表示体积v时，拿了物品i和不拿物品i时的价值取较大值。
+
+**伪代码**
+
+```
+int bag(int v[],int w[],int n) {
+    for i in [0,n)
+    	for v in [vMax,v[i]]
+    		dp[v][i] = max(dp[v - v[i]][i - 1] + w[i], dp[v][i - 1])
+
+    return dp[vMax][n - 1]
+}
+```
+
+若要求得具体拿了哪些物品，可以倒推回去
+
+```
+void traceback(int dp[][], int v[], int n){
+	int x[n];
+	
+	for i in (n, 1]
+		if (dp[v][i] == dp[v][i - 1]) //未拿i
+			x[i] = 0
+		else
+			x[i] = 1
+			v -= v[i]
+	x[0] = dp[v][0] > 0 ? 1 : 0
+   
+   	for i in [0, n)
+   		if(x[i] == 1)
+   			printf("拿了物品id = %d\n", i)
+}
+```
+
+#### 8.1.2 完全背包问题
+
+**问题描述**
+
+完全背包表示每个物品可以取无限次，只要加起来总容量不超过V就可以。 
+
+**解析**
+
+解法基本一致，只是每次需要将 i 物品放若干次直到放不下位置。转移方程
+
+$$ dp[v][i] = max(dp[v - v_i * k] + w_i * k, dp[v][i - 1]) $$
+
+**伪代码**
+
+```
+int bag(int v[],int w[],int n) {
+    for i in [0,n)
+    	for v in [vMax,v[i]]
+    		for k in [0,vMax/v[i]]
+    			dp[v][i] = max(dp[v - k * v[i]][i - 1] + k * w[i], dp[v][i])
+
+    return dp[vMax][n - 1]
+}
+```
+
+很容易知道如果每个物品有数量限制，只需要控制 k 得范围即可。

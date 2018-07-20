@@ -3,6 +3,7 @@
     * **JAVA基础（集合类等）（完成）**
     * **JVM**（完成）
     * **HeadFirst编程模式**（完成）
+    * 常用框架的思想，主要原理，优缺点
   * C++
     * C++ 基础
   * Python
@@ -32,6 +33,20 @@
 * 进阶
   * 机器学习
 
-着重总结常用框架的面试题，Spring，Structs，然后去了解一到两个个中间件的
 
-然后是消息队列，内存数据库，然后是Hadoop Spark等
+
+**着重总结常用框架的面试题，Spring，Structs，然后去了解一到两个个中间件的**
+
+**TODO**
+
+**Zookeeper**
+
+**KafKa**
+
+**RocketMQ**
+
+**Hadoop**
+
+**Spark**
+
+**HBase**
