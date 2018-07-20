@@ -56,7 +56,7 @@
 * [Redis](ProgrammingNotes/Redis.md)
 * kafka
 * rocketMQ
-* zookeeper
+* [Zookeeper](ProgrammingNotes/zookeeper.md)
 
 ## 大数据 :baby_chick:
 
