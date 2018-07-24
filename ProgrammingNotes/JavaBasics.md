@@ -1,5 +1,7 @@
 # Java 基础
 
+[TOC]
+
 ## 1. 关键字
 
 ### 1.1 final
@@ -935,7 +937,9 @@ synchronized 可以锁定一个对象或一个类。
 
 需要注意的是，类的锁和该类对象的锁并不冲突，或者说没有关系，互不影响。也就是说，当一个线程锁定了某个类，其他线程仍可以锁定该类的某个对象，反之亦然。
 
-在 synchronized 内部可以通过 Object.wait() 释放锁，同时线程在当前位置休眠，直到其他线程调用 Object.notify() 唤醒该线程，才能继续锁定该对象，并继续执行。Object.notify() 并不会立即释放锁，而是在当前线程退出 synchronized 块后，随机选择一个 wait 线程去唤醒。Object.notifyAll() 会唤醒所有 wait 线程， 被唤醒的线程按照随机的顺序执行。
+在 synchronized 内部可以通过 Object.wait() 释放锁，同时线程在当前位置休眠，直到其他线程调用 Object.notify() 唤醒该线程，才能继续锁定该对象，并继续执行。Object.notify() 并不会立即释放锁，而是在当前线程释放了同步锁后，随机选择一个 wait 线程去唤醒。Object.notifyAll() 会唤醒所有 wait 线程， 被唤醒的线程按照随机的顺序执行。
+
+注意：Object.wait(time)，也可以指定时间自动唤醒，time为0则仍需要等待 notify()。
 
 **Object.wait() 与 Thread.sleep()**
 
@@ -945,6 +949,11 @@ synchronized 可以锁定一个对象或一个类。
 >如果某个线程拥有某个或某些对象的同步锁，那么在调用了wait()后，这个线程就会释放它持有的所有同步资源，而不限于这个被调用了wait()方法的对象。 
 >
 >Thread.sleep() 表示让一个线程进入睡眠状态，等待一定的时间之后，自动醒来进入到可运行状态，不会马上进入运行状态，因为线程调度机制恢复线程的运行也需要时间，一个线程对象调用了sleep方法之后 
+
+**Object.wait() 与 Object.notify() 引起的状态切换**
+
+* wait() 调用后线程进入等待队列（与阻塞不同，会释放所有资源）
+* notify() 会随机唤醒一个线程到就绪或锁池队列（获取不到锁会进入）
 
 ### 7.2 并发容器
 
@@ -1063,11 +1072,11 @@ f.get(); //阻塞直到callable返回结果（正常，异常）
 
 - run()，同步调用，和调用正常方法没有区别。
 
-- start()，启动线程
+- start()，启动线程，进入就绪状态
 
 - join()，同步线程，如`t.join()`，主线程阻塞等到t线程调用完成后才向后执行
 
-- interrupt()，中断一个处于sleep()/wait()/join()阻塞状态的线程，如`t.join()`，会将 t 线程中断标记设为 true，同时再 t 线程内部抛出 InterruptedException 异常。将 InterruptedException 放在适当的位置就能终止线程，形式如下： 
+- interrupt()，中断一个处于sleep()/wait()/join()阻塞状态的线程，处于这些方法阻塞的线程将抛出 InterruptedException 异常 。如`t.join()`，会将 t 线程中断标记设为 true，同时再 t 线程内部抛出 InterruptedException 异常。将 InterruptedException 放在适当的位置就能终止线程，形式如下： 
 
   ```java
   try {
@@ -1077,7 +1086,9 @@ f.get(); //阻塞直到callable返回结果（正常，异常）
   }
   ```
 
-- yield()，线程让步，将当前线程由运行转为就绪态
+- sleep(),  阻塞当前线程，给其他所有线程执行的机会
+
+- yield()，线程让步，将当前线程由运行转为就绪态。这时与其他进程处于同等竞争状态，OS有可能会接着又让这个进程进入运行状态。相当于给优先级和自己相同或比自己高的线程执行机会。
 
 ### 7.5 线程池
 

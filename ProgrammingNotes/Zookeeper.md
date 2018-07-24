@@ -1,4 +1,4 @@
-# Zookeeper
+#  Zookeeper
 
 ## 1. 概述
 
@@ -443,7 +443,7 @@ DataNode 结构解析：
 
 * children，子节点集合（不包括孙子节点）
 
-* data，该节点存储的数据
+* data，该节点存储的数据，大小限制为1M
 
 * acl，控制权限。权限包括，增、读、写、子节点删除以及管理等五种，分别对应 crwda。
 
@@ -574,7 +574,7 @@ None 触发 client 默认的 Watcher
 
 1. 服务器 trigerWatch 触发   
     当server接受到例如 createNode/deleteNode/setData 等操作时，将会操作ZKDatabase来操作DataTree中的数据，同时也会检查 dataWatches 和 childWatches 相应节点上的 watch（有可能一个操作会导致多种watch被触发），trigerWatch 就是在这些时机下被调用。 trigerWatch 会在两种 watches 列表中删除其关联的watch。
-  然后 trigerWatch 调用 watch.process()，这个 process() 只做了一件事情，就是向 client 发送一个nofication消息，此消息中包含一个WatchEvent对象，此对象封装了事件的类型/path等。 
+    然后 trigerWatch 调用 watch.process()，这个 process() 只做了一件事情，就是向 client 发送一个nofication消息，此消息中包含一个WatchEvent对象，此对象封装了事件的类型/path等。 
 
 2. 客户端处理 nofication
     客户端接受到 nofication，并反序获取 WatchEvent，然后和 server 端的 watcherManager 一样，ZKWatcherManager 根据 event 类型，从相应的一个或多个watches列表中分别移除相应path的watch，并将这些“移除”的watches再次封装成一个WatcherSetEventPair，此对象持有event和watches集合。最后将此pair加入event 队列。

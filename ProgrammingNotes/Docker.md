@@ -1,5 +1,7 @@
 # Docker #
 
+[TOC]
+
 ## 1. 安装docker ##
 
 ### 1.1 安装 ###
@@ -55,6 +57,7 @@
 #### 2.1.2 本地镜像管理 ####
 
 * **列出所有镜像：**  `docker images`
+* **删除镜像** `docker rmi {镜像名/ID}`
 * **重新标记镜像名（Tag）：** `docker tag {源镜像名} {目标镜像名}`
 * **使用Dockerfile构建镜像：** `docker build [-t {设置镜像名}] {Dockerfile所在目录}`
 

@@ -246,10 +246,25 @@
   ```
   # netstat -anp | grep <port>
   ```
+### 1.5 用户命令
 
-  ​
+`/etc/passwd` 保存了所有用户信息，格式：用户名:密码:UID:GID:用户信息:HOME目录路径:用户shell 
 
-### 1.5 常用基础命令 ###
+`/etc/group` 保存了所有组信息，格式：用户组名:组密码:GID:组内帐号（多个帐号用逗号分隔） 
+
+* **useradd / adduser** 添加用户
+* **userdel** 删除用户
+* **usermod** 修改用户信息
+* **passwd** 设置密码
+* **su** 切换用户
+* **sudo** 其他用户身份执行
+* **groupadd** 添加组
+* **groupdel** 删除组
+* **groupmod** 修改组
+* **groups** 显示用户组信息
+
+
+### 1.6 常用基础命令 ###
 
 以下命令已经用的比较久，比较熟，不详细笔记了，只记录一下。
 
@@ -279,6 +294,7 @@ $ df -hl
 $ env $PATH
 $ shutdown
 $ who
+$ man
 ```
 
 **组合键操作**
@@ -286,7 +302,7 @@ $ who
 * **Ctrl + C**：彻底退出
 * **Ctrl + Z**：挂起当前进程
 
-### 1.6 高级指令 ###
+### 1.7 高级指令 ###
 
 **周期执行指令**
 
@@ -964,13 +980,13 @@ void childproc(){
   	int msgid,ret_value;    
   	char str[512];    
       
-  	while(1){    
+  	while(1){
      	msgid = msgget(MSGKEY,IPC_EXCL );/*检查消息队列是否存在 */    
      	if(msgid < 0){    
         	printf("msq not existed! errno=%d [%s]\n",errno,strerror(errno));    
         	sleep(2);    
         	continue;    
-     	}    
+     }    
      /*接收消息队列*/    
      	ret_value = msgrcv(msgid,&msgs,sizeof(struct msgstru),0,0);    
      	printf("text=[%s] pid=[%d]\n",msgs.msgtext,getpid());    

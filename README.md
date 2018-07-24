@@ -20,7 +20,7 @@
 
 > **Python**
 
-* [Python 基础](https://github.com/jerehao/EncyclopediaOfProgramming/blob/master/ProgrammingLanguage/Python%20%E5%9F%BA%E7%A1%80.md)
+* [Python 基础](ProgrammingNotes/PythonBasics.md)
 
 > **编程工具**
 
@@ -47,20 +47,19 @@
 ## 数据库 :floppy_disk:
 
 * [数据库基础](ProgrammingNotes/DatabaseBasics.md)
-* MySQL
-* Redis
+* [MySQL](ProgrammingNotes/MySQL.md)
 
 ## 分布式 :sweat_drops:
 
 * [分布式基础](ProgrammingNotes/DistributedSystem.md)
 * [Redis](ProgrammingNotes/Redis.md)
-* kafka
+* [kafka](ProgrammingNotes/Kafka.md)
 * rocketMQ
 * [Zookeeper](ProgrammingNotes/zookeeper.md)
 
 ## 大数据 :baby_chick:
 
-* Hadoop
+* [Hadoop](ProgrammingNotes/Hadoop.md)
 * Spark
 * Hbase
 
@@ -72,3 +71,7 @@
 
 * WEB SERVER
 * 异步RPC架构
+* 练习shell/python脚本
+* 练习sql语句
+* JDK 更多源码的阅读
+* 更多工程实际问题的解决方法
