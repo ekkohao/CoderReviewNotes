@@ -61,7 +61,7 @@
 
 * [Hadoop](ProgrammingNotes/Hadoop.md)
 * Spark
-* Hbase
+* [HBase](ProgrammingNotes/HBase.md)
 
 ## 机器学习 :man_astronaut:
 
