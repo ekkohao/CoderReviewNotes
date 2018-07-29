@@ -11,7 +11,8 @@ if "%input%"=="" goto reinput
 set /p confirm=请确认输入信息【%input%】（Y / N）
 
 if %confirm% == N goto reinput
-if %confirm% neq Y goto reconfirm
+if %confirm% == n goto reinput
+if %confirm% neq Y (if %confirm% neq y goto reconfirm )
 
 git add . && git commit -m "%input%" && git push
 
