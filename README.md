@@ -31,6 +31,11 @@
 * [Gradle](ProgrammingNotes/Gradle.md)
 * [Docker](ProgrammingNotes/Docker.md)
 
+> **系统脚本语言**
+
+* shell 脚本基础
+* [bat 脚本基础](ProgrammingNotes/BatBasics.md)
+
 ## 计算机专业基础 :books:
 
 > **操作系统** 
