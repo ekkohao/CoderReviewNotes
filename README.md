@@ -1,9 +1,3 @@
----
-test: haha
----
-
-
-
 # EncyclopediaOfProgramming
 
 |                           一                           |                          二                          |                        三                        |                        四                        |                       五                       |                            六                            |
@@ -14,11 +8,15 @@ test: haha
 
 > **Java**
 
-* [Java 基础](ProgrammingNotes/JavaBasic.md)
+* [Java 基础](ProgrammingNotes/JavaBasics.md)
 * [Java 虚拟机](ProgrammingNotes/JavaVirtualMachine.md)
 * [JDK 源码分析](ProgrammingNotes/JDKSourceCodeAnalysis.md)
 * [设计模式](ProgrammingNotes/DesignPatterns.md)
 * [Java Mybatis](ProgrammingNotes/JavaMybatis.md)
+
+> Go
+
+* [Go 基础](ProgrammingNotes/GoBasics.md)
 
 > **C++**
 
@@ -58,10 +56,12 @@ test: haha
 ## 分布式 :sweat_drops:
 
 * [分布式基础](ProgrammingNotes/DistributedSystem.md)
-* [Redis](ProgrammingNotes/Redis.md)
-* [kafka](ProgrammingNotes/Kafka.md)
-* rocketMQ
 * [Zookeeper](ProgrammingNotes/zookeeper.md)
+* [Redis](ProgrammingNotes/Redis.md)
+* Memcached
+* [Kafka](ProgrammingNotes/Kafka.md)
+* [RocketMQ](ProgrammingNotes/RocketMQ.md)
+* Dubbo
 
 ## 大数据 :baby_chick:
 
