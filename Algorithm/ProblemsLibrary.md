@@ -30,7 +30,7 @@ class Solution {
      * B数组保存当前扫描数相应长度递增序列的最小末位
      * 如 B[i]==3 表示当前长度为i + 1的递增子序列最小末位为3
      * 
-     * eg 序列[5,6,1,7]，从向向后扫描
+     * eg 序列[5,6,1,7]，从前向后扫描
      * 扫描5，B数组为空，B=[5]
      * 扫描6，b=[5,6]
      * 扫描1，b=[1,6],此时长度为1的序列最小末位为1，长度为2的序列最小末位为6
@@ -58,6 +58,73 @@ class Solution {
         }
         
         return len;
+    }
+}
+```
+
+### 最多两次交易的最大利润
+
+**来源**
+
+Leetcode 123
+
+**描述**
+
+给定一个数组，它的第 *i* 个元素是一支给定的股票在第 *i* 天的价格。
+
+设计一个算法来计算你所能获取的最大利润。最多可以完成*两笔* 交易。 
+
+**示例**
+
+> 输入：
+>
+> ```
+> [3,3,5,0,0,3,1,4]
+> ```
+>
+> 输出：
+>
+> ```
+> 6
+> ```
+>
+> 解释：在第 4 天（股票价格 = 0）的时候买入，在第 6 天（股票价格 = 3）的时候卖出，这笔交易所能获得利润 = 3-0 = 3 。     随后，在第 7 天（股票价格 = 1）的时候买入，在第 8 天 （股票价格 = 4）的时候卖出，这笔交易所能获得利润 = 4-1 = 3 。
+
+**题解**
+
+```java
+class Solution {
+    /**
+     * 使用 local[i][j] 表示到第 i 天最多 j 次交易，且最后一次卖出日为第 i 天的最大利润
+     * 使用 global[i][j] 表示到第 i 天最多 j 次交易的最大利润
+     * 
+     * 转义方程：
+     * global 很好得出 global[i][j] = max(global[i - 1][j], local[i][j])
+     * local 需要分析下，第i日为卖出日这是一定的，对最后一次买入日分情况：
+     * 		若为第 i - 1 日，则 
+     *			local[i][j] = global[i - 2][j] + prices[i] - prices[i - 1]
+     *		若为更早的时间，则可以看作第 i - 1 日别卖了，留到第 i 日卖，可以表示为
+     *			local[i][j] = local[i - 1][j] + prices[i] - prices[i - 1]
+     * 若第 i - 1 日为买入日，则有 global[i - 2][j] == global[i - i][j]，最后归纳下得到
+     *		local[i][j] = max(global[i - i][j], local[i - 1][j]) + prices[i] - prices[i - 1];
+     * 由于值覆盖的关系可以对二维数组进行化简为一维。
+     */
+    public int maxProfit(int[] prices) {
+
+        if(prices==null || prices.length==0)
+            return 0;
+        int[] local = new int[3];
+        int[] global = new int[3];
+        for(int i=0;i<prices.length-1;i++)
+        {
+            int diff = prices[i+1]-prices[i];
+            for(int j=2;j>=1;j--)
+            {
+                local[j] = Math.max(global[j-1], local[j]) + diff;
+                global[j] = Math.max(local[j],global[j]);
+            }
+        }
+        return global[2];   
     }
 }
 ```
