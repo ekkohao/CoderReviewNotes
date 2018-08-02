@@ -848,7 +848,7 @@ switch 不支持 long，是因为 swicth 的设计初衷是为那些只需要对
 **List**, 保证插入先后顺序的集合类
 
 * LinkedList  链表实现
-* ArrayList  可变数组实现
+* ArrayList  可变数组实现，Arrays.asList() 返回的是 Arrays.ArrayList 内部类，是只读的，修改方法直接报异常。
 * Vector   Synchronized 实现相当于线程同步的ArrayList
 * Stack  继承Vector，保证后进先出
 
@@ -1474,7 +1474,7 @@ Throwable 可以用来表示任何可以作为异常抛出的类，分为两种�
 2.  **非受检异常** ：是程序运行时错误，例如除 0 会引发 Arithmetic Exception，此时程序奔溃并且无法恢复。
 
 <div align="center">
-![PPjwP](./assets/PPjwP.png)
+![PPjwP](JavaBasics.assets/PPjwP.png)
 </div>
 
 > [Java 入门之异常处理](https://www.tianmaying.com/tutorial/Java-Exception) <br />[Java 异常的面试问题及答案 -Part 1](http://www.importnew.com/7383.html)

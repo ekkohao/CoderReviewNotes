@@ -6,7 +6,7 @@
 
 运行时数据区包括：程序计数器，JAVA栈，本地方法栈，方法区，JAVA堆。
 
-<div align="center">![img](./assets/540631a4-6018-40a5-aed7-081e2eeeaeea.png)</div>
+<div align="center">![img](JavaVirtualMachine.assets/540631a4-6018-40a5-aed7-081e2eeeaeea.png)</div>
 
 - **程序计数器** 线程私有，存储线程当前执行的字节码指令的位置，如果执行的是Native方法，则为空值（Undefined）
 - **JAVA栈** 线程私有，存储方法执行的过程，请求的栈深度大于虚拟机允许的最大深度时会抛出StackOverflowError，可扩展的栈无法扩展时（内存无可用空间时）会抛出OutofMemeryError
@@ -40,7 +40,7 @@ Java1.8 时 HotSpot 彻底没有了永久带，而是将方法区放在一个与
 - From Survivor
 - To Survivor
 
-<div align="center">![img](./assets/ppt_img.gif)</div>
+<div align="center">![img](JavaVirtualMachine.assets/ppt_img.gif)</div>
 
 ###### JVM内存管理参数 ######
 
@@ -76,7 +76,7 @@ OOP-KLASS 是 HotSpot 中存储对象的一种方式，OOP（Ordinary Object Poi
 
 下图就是 HotSpot 根据引用找到类元信息的示例，先通过引用找到堆中的对象，在根据对象中的 instanceOopDesc 找到类元信息。
 
-<div align="center">![OOP-KLASS](./assets/OOP-KLASS.png)</div>
+<div align="center">![OOP-KLASS](JavaVirtualMachine.assets/OOP-KLASS.png)</div>
 
 
 
@@ -422,7 +422,7 @@ G1垃圾回收模式的选择：
 
 下图展示的类加载器之间的层次关系，称为类加载器的双亲委派模型（Parents Delegation Model）。该模型要求除了顶层的启动类加载器外，其余的类加载器都应有自己的父类加载器。这里类加载器之间的父子关系一般通过组合（Composition）关系来实现，而不是通过继承（Inheritance）的关系实现。
 
-<div align=center>![img](./assets/class_loader_hierarchy.png)</div>
+<div align=center>![img](JavaVirtualMachine.assets/class_loader_hierarchy.png)</div>
 
 **（一）工作过程**
 

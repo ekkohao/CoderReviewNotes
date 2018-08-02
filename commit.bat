@@ -2,11 +2,15 @@
 
 :reinput
 
+set input=
+
 set /p input=请输入 commit 信息：
 
 if "%input%"=="" goto reinput
 
 :reconfirm
+
+set confirm=
 
 set /p confirm=请确认输入信息【%input%】（Y / N）
 

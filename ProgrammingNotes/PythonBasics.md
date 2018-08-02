@@ -30,7 +30,7 @@
 
 <div align=center>
 
-![Python-l](./assets/l.png)
+![Python-l](PythonBasics.assets/l.png)
 
 </div>
 
@@ -1181,7 +1181,7 @@ pip install Pillow
 
 耐心等待下载并安装后，就可以使用Pillow了。
 
-![且慢](./assets/l-1525398716149.png)
+![且慢](PythonBasics.assets/l-1525398716149.png)
 
 ###### 安装常用模块
 

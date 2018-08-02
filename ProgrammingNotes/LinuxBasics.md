@@ -553,13 +553,13 @@ options 参数主要有 WNOHANG 和 WUNTRACED 两个选项，WNOHANG 可以使 w
 
 **僵尸进程**
 
-一个子进程的进程描述符在子进程退出时不会释放，只有当父进程通过 wait() 或 waitpid() 获取了子进程信息后才会释放。如果子进程退出，而父进程并没有调用 wait() 或 waitpid()，那么子进程的进程描述符仍然保存在系统中，这种进程称之为僵尸进程。
-
-僵尸进程通过 ps 命令显示出来的状态为 Z（zombie）。
-
-系统所能使用的进程号是有限的，如果大量的产生僵尸进程，将因为没有可用的进程号而导致系统不能产生新的进程。
+一个子进程的进程描述符在子进程退出时不会释放，只有当父进程通过 wait() 或 waitpid() 获取了子进程信息后才会释放。如果子进程退出，而父进程并没有调用 wait() 或 waitpid()，那么子进程的进程描述符仍然保存在系统中，这种进程称之为僵尸进程。僵尸进程通过 ps 命令显示出来的状态为 Z（zombie）。系统所能使用的进程号是有限的，如果大量的产生僵尸进程，将因为没有可用的进程号而导致系统不能产生新的进程。
 
 要消灭系统中大量的僵尸进程，只需要将其父进程杀死，此时所有的僵尸进程就会变成孤儿进程，从而被 init 所收养，这样 init 就会释放所有的僵死进程所占有的资源，从而结束僵尸进程。
+
+**为什么进程会有僵尸态**
+
+unix 提供了一种机制可以保证只要父进程想知道子进程结束时的状态信息， 就可以得到。这种机制就是: 在每个进程退出的时候,内核释放该进程所有的资源,包括打开的文件,占用的内存等。 但是仍然为其保留一定的信息（包括进程号the process ID,退出状态the termination status of the process,运行时间the amount of CPU time taken by the process等）。直到父进程通过wait / waitpid来取时才释放。 但这样就导致了问题，如果进程不调用wait / waitpid的话， 那么保留的那段信息就不会释放，其进程号就会一直被占用，但是系统所能使用的进程号是有限的，如果大量的产生僵死进程，将因为没有可用的进程号而导致系统不能产生新的进程. 此即为僵尸进程的危害，应当避免。
 
 ## 4. 进程通信IPC与线程通信 ##
 
@@ -759,7 +759,7 @@ FIFO 常用于客户-服务器应用程序中，FIFO 用作汇聚点，在客户
 
 **信号列表：**我们可以用**kill -l**命令查看系统中定义的信号列表：
 
-![1](https://img-blog.csdn.net/20170614094840733?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3VtbXlfSg==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
+1) SIGHUP         2) SIGINT            3) SIGQUIT        4) SIGILL 5) SIGTRAP        6) SIGABRT          7) SIGBUS         8) SIGFPE 9) SIGKILL        10) SIGUSR1         11) SIGSEGV       12) SIGUSR2 13) SIGPIPE       14) SIGALRM         15) SIGTERM       16) SIGSTKFLT 17) SIGCHLD       18) SIGCONT         19) SIGSTOP       20) SIGTSTP 21) SIGTTIN       22) SIGTTOU         23) SIGURG        24) SIGXCPU 25) SIGXFSZ       26) SIGVTALRM       27) SIGPROF       28) SIGWINCH 29) SIGIO         30) SIGPWR          31) SIGSYS        34) SIGRTMIN 35) SIGRTMIN+1     36) SIGRTMIN+2      37) SIGRTMIN+3    38) SIGRTMIN+4 39) SIGRTMIN+5     40) SIGRTMIN+6      41) SIGRTMIN+7    42) SIGRTMIN+8 43) SIGRTMIN+9     44) SIGRTMIN+10     45) SIGRTMIN+11   46) SIGRTMIN+12 47) SIGRTMIN+13    48) SIGRTMIN+14     49) SIGRTMIN+15   50) SIGRTMAX-14 51) SIGRTMAX-13    52) SIGRTMAX-12     53) SIGRTMAX-11   54) SIGRTMAX-10 55) SIGRTMAX-9     56) SIGRTMAX-8      57) SIGRTMAX-7    58) SIGRTMAX-6 59) SIGRTMAX-5     60) SIGRTMAX-4      61) SIGRTMAX-3    62) SIGRTMAX-2 63) SIGRTMAX-1     64) SIGRTMAX  
 
 乍一看，好像有64种信号，但如果仔细观察，你就会发现并非如此。没有32和33号信号。一共只有62个信号
 
