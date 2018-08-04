@@ -44,8 +44,8 @@ Java1.8 时 HotSpot 彻底没有了永久带，而是将方法区放在一个与
 
 ###### JVM内存管理参数 ######
 
-- **-Xms**  初始化堆的大小
-- **-Xmx**  堆的最大大小
+- **-Xms**  初始化内存（年轻带+年老带）的大小
+- **-Xmx**  内存的最大大小
 - **-Xss**  每个线程的栈大小
 - **-XX:NewSize**  新生代初始大小
 - **-XX:MaxNewSize**  新生代最大大小
@@ -279,7 +279,7 @@ P.u = null; //P的u变量还没有遍历就被从P删除了，这样Tracing判�
 
 ### 2.9 垃圾收集器的发展 ###
 
-新生代：`Serial`(暂停其他线程，单线程GC复制算法) ==> `ParNew`(暂停其他线程，多线程GC复制算法，尽可能缩短每次GC时间) ==> `Parallel Scavenge`(暂停其他线程，多线程GC复制算法，经可能提高CPU在其他线程的工作率) 
+新生代：`Serial`(暂停其他线程，单线程GC复制算法) ==> `ParNew`(暂停其他线程，多线程GC复制算法，尽可能缩短每次GC时间) ==> `Parallel Scavenge`(暂停其他线程，多线程GC复制算法，尽可能提高CPU在其他线程的工作率) 
 老年代：`Serial Old`(暂停其他线程，单线程GC标记整理算法) ==> `Paralled Old`(暂停其他线程，多线程GC标记整理算法) ==> `CMS` 
 跨区域：`G1`
 
@@ -308,11 +308,18 @@ G1将内存分为多个大小相等的独立区域，称之为Region，仍保留
 
 G1对巨型对象的存储，当一个对象的大小超过Region大小的一半时，G1认为这是一个巨型对象，会把它存到一个叫Humongous的区域，简称H区，当一个H区存不下巨型对象时，会寻找连续的H区，找不到满足要求的连续H区，会不得不触发一次`Full GC`。
 
-G1会每隔一定时间启动一次全局并发标记，基于此G1可以直到哪些Region收集价值最大。全部并发标记过程：
+G1会每隔一定时间启动一次全局并发标记，基于此G1可以直到哪些Region收集价值最大。**全局并发标记过程**：
 
 1. 初始标记（STW）  标记`GC Roots`可直达对象（压入`Marking Stack`中），一般借助`G1 Young GC`完成。
+
 2. 并发标记  从初始标记开始遍历整个堆（借助`Marking Stack`），同时也对`SATB writer barrair`记录的对象遍历
+
+   > 记忆点：并发标记进行可达性算法的同时，同时处理引用更改（每个线程会记录更改，更改队列满时加入全局对象，专门全局线程会处理）的对象
+
 3. 最终标记（STW）  接着处理`SATB writer barrair`没遍历完的对象。
+
+   > 记忆点：接着处理更改
+
 4. 筛选回收（STW）  若某个Region没有存活对象，直接回收。然后对Region回收价值排序，对象存活越少的Region回收价值越高。
 
 > `SATB writer barrair`维护了一个队列，记录每个mutator丢弃旧引用对象，每个对象都这样一个队列，叫做`SATB Marked Quene`，每当某个线程的`SATB Markde Quene`满时，线程都将其加入到全局的`SATB Marked Quene Set`中，然后线程获得一个新的空队列继续记录。每当`SATB Marked Quene Set`超过一定长度阈值时，并发标记线程都将队列中的所有对象压入`marking stack`上，等待进一步标记。 
@@ -412,7 +419,7 @@ G1垃圾回收模式的选择：
 
 从 Java 开发人员的角度看，类加载器可以划分得更细致一些：
 
-- **启动类加载器（Bootstrap ClassLoader）**此类加载器负责将存放在 <JAVA_HOME>\lib 目录中的，或者被 -Xbootclasspath 参数所指定的路径中的，并且是虚拟机识别的（仅按照文件名识别，如 rt.jar，名字不符合的类库即使放在 lib 目录中也不会被加载）类库加载到虚拟机内存中。启动类加载器无法被 Java 程序直接引用，用户在编写自定义类加载器时，如果需要把加载请求委派给启动类加载器，直接使用 null 代替即可。
+- **启动类加载器（Bootstrap ClassLoader）** 此类加载器负责将存放在 <JAVA_HOME>\lib 目录中的，或者被 -Xbootclasspath 参数所指定的路径中的，并且是虚拟机识别的（仅按照文件名识别，如 rt.jar，名字不符合的类库即使放在 lib 目录中也不会被加载）类库加载到虚拟机内存中。启动类加载器无法被 Java 程序直接引用，用户在编写自定义类加载器时，如果需要把加载请求委派给启动类加载器，直接使用 null 代替即可。
 - **扩展类加载器（Extension ClassLoader**）这个类加载器是由 `ExtClassLoader(sun.misc.Launcher$ExtClassLoader)`实现的。它负责将 <JAVA_HOME>/lib/ext 或者被 java.ext.dir 系统变量所指定路径中的所有类库加载到内存中，开发者可以直接使用扩展类加载器。
 - **应用程序类加载器（Application ClassLoader**）这个类加载器是由 AppClassLoader（sun.misc.Launcher$AppClassLoader）实现的。由于这个类加载器是 ClassLoader 中的 getSystemClassLoader() 方法的返回值，因此一般称为系统类加载器。它负责加载用户类路径（ClassPath）上所指定的类库，开发者可以直接使用这个类加载器，如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。
 

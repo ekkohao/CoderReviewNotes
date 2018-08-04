@@ -32,7 +32,7 @@ ApplicationContext 扩展了 BeanFactory，可以在不同的应用中使用不�
 * BeanWrapper
 * ApplicationContext
 
-#### 1.2 Bean
+### 1.2 Bean
 
 **（一）Bean 的配置方式**
 
@@ -56,6 +56,31 @@ ApplicationContext 扩展了 BeanFactory，可以在不同的应用中使用不�
 * request
 * session
 * global session
+
+**（四）处理循环依赖**
+
+Spring中循环依赖场景有：（1）构造器的循环依赖  （2）field属性的循环依赖。 
+
+其中构造器的循环依赖是Spring不能解决的，只会抛出异常。而属性注入的依赖是可以被解决的。
+
+详细来看属性循坏依赖的解决：
+
+spring 有三级缓存：  
+
+* singletonFactories ： 单例对象工厂的cache ，完全注入完成的bean对象
+* earlySingletonObjects ：提前暴光的单例对象的Cache ，曝光的半成品bean对象（只完成了构造方法）
+* singletonObjects：单例对象的cache ，未曝光的半成品bean对象（只完成了构造方法）
+
+每次找对象会依此从一级缓存向下找，当找到 singletonObjects 会把未曝光的半成品，移动到曝光的半成品中。
+
+这样，通过曝光的半成品对象就解决的属性的循环依赖。但解决不了构造器的循环依赖（因为构造器执行完才有半成品）。
+
+### 1.3 Spring中用到的设计模式
+
+* 单例
+* 工厂
+* 代理
+* 适配器
 
 ## 2. ORM
 

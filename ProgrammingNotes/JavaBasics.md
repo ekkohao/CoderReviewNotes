@@ -883,6 +883,14 @@ switch 不支持 long，是因为 swicth 的设计初衷是为那些只需要对
 * HashMap 支持 null 键和 null 值，HashTable 不支持（因为HashMap把null 的哈希值设为了0）
 * HashMap线程不安全，HashTable 使用 Synchronized 实现线程安全
 
+#### 6.2.4 并发情况下 HashMap 的问题
+
+**扩容死循环**
+
+![img](JavaBasics.assets/831179-20160620074911319-1507561812.png) 
+
+设想上图，扩容时线程一的 e 和 next 指针初始时都指向3，线程二就将其余扩容完成了，这时线程一继续扩容，next 会直线 e 的下一个为空，然后会把 3 查到 7 之前，而 7 的下一个又指向 3，单链表成环，这样下一次get 就发生了死循环。 
+
 ### 6.3 将线程不安全的集合转为线程安全的集合
 
 ```java
@@ -1593,7 +1601,3 @@ ThreadLocal 的实现是这样的：每个 Thread 维护一个 ThreadLocalMap�
 
 - Eckel B. Java 编程思想[M]. 机械工业出版社, 2002.
 - Bloch J. Effective java[M]. Addison-Wesley Professional, 2017.
-
-```
-
-```
