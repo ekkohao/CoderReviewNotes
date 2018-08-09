@@ -1,4 +1,4 @@
-# EncyclopediaOfProgramming
+# CoderReviewNotes -- 程序员的复习笔记
 
 |                           一                           |                          二                          |                        三                        |                        四                        |                       五                       |                            六                            |
 | :----------------------------------------------------: | :--------------------------------------------------: | :----------------------------------------------: | :----------------------------------------------: | :--------------------------------------------: | :------------------------------------------------------: |
@@ -8,77 +8,79 @@
 
 > **Java**
 
-* [Java 基础](ProgrammingNotes/JavaBasics.md)
-* [Java 虚拟机](ProgrammingNotes/JavaVirtualMachine.md)
-* [JDK 源码分析](ProgrammingNotes/JDKSourceCodeAnalysis.md)
-* [设计模式](ProgrammingNotes/DesignPatterns.md)
-* [Java Mybatis](ProgrammingNotes/JavaMybatis.md)
-* [Java工程框架](ProgrammingNotes/JavaProjectStructs.md)
+* [Java 基础](notes/JavaBasics.md)
+* [Java 虚拟机](notes/JavaVirtualMachine.md)
+* [JDK 源码分析](notes/JDKSourceCodeAnalysis.md)
+* [设计模式](notes/DesignPatterns.md)
+* [Java Mybatis](notes/JavaMybatis.md)
+* [Java工程框架](notes/JavaProjectStructs.md)
 
 > Go
 
-* [Go 基础](ProgrammingNotes/GoBasics.md)
+* [Go 基础](notes/GoBasics.md)
 
 > **C++**
 
-* [C++ 基础](ProgrammingNotes/CppBasics.md)
+* [C++ 基础](notes/CppBasics.md)
 
 > **Python**
 
-* [Python 基础](ProgrammingNotes/PythonBasics.md)
+* [Python 基础](notes/PythonBasics.md)
 
 > **编程工具**
 
-* [Gradle](ProgrammingNotes/Gradle.md)
-* [Docker](ProgrammingNotes/Docker.md)
+* [Gradle](notes/Gradle.md)
+* [Docker](notes/Docker.md)
 
 > **系统脚本语言**
 
 * shell 脚本基础
-* [bat 脚本基础](ProgrammingNotes/BatBasics.md)
+* [bat 脚本基础](notes/BatBasics.md)
 
 ## 计算机专业基础 :books:
 
 > **操作系统** 
 
-* [操作系统](ProgrammingNotes/OperatingSystem.md)
-* [Linux 基础](ProgrammingNotes/LinuxBasics.md)
+* [操作系统](notes/OperatingSystem.md)
+* [Linux 基础](notes/LinuxBasics.md)
 
-* [Linux Socket](ProgrammingNotes/LinuxSocket.md)
+* [Linux Socket](notes/LinuxSocket.md)
 
 > **计算机网络**
 
-* [计算机网络](ProgrammingNotes/NetworkOfComputer.md)
+* [计算机网络](notes/NetworkOfComputer.md)
 
 > **算法**
 
-* [算法](Algorithm/Algorithm.md)
+* [数据结构](notes/DataStructures.md)
+* [算法](notes/Algorithm.md)
+* [题集](notes/ProblemSet.md)
 
 ## 数据库 :floppy_disk:
 
-* [数据库基础](ProgrammingNotes/DatabaseBasics.md)
-* [MySQL](ProgrammingNotes/MySQL.md)
+* [数据库基础](notes/DatabaseBasics.md)
+* [MySQL](notes/MySQL.md)
 
 ## 分布式 :sweat_drops:
 
-* [分布式基础](ProgrammingNotes/DistributedSystem.md)
-* [Zookeeper](ProgrammingNotes/zookeeper.md)
-* [Redis](ProgrammingNotes/Redis.md)
+* [分布式基础](notes/DistributedSystem.md)
+* [Zookeeper](notes/Zookeeper.md)
+* [Redis](notes/Redis.md)
 * Memcached
-* [Kafka](ProgrammingNotes/Kafka.md)
-* [RocketMQ](ProgrammingNotes/RocketMQ.md)
+* [Kafka](notes/Kafka.md)
+* [RocketMQ](notes/RocketMQ.md)
 * Dubbo
 
 ## 大数据 :baby_chick:
 
-* [大数据基础](ProgrammingNotes/BigDataBasics.md)
-* [Hadoop](ProgrammingNotes/Hadoop.md)
+* [大数据基础](notes/BigDataBasics.md)
+* [Hadoop](notes/Hadoop.md)
 * Spark
-* [HBase](ProgrammingNotes/HBase.md)
+* [HBase](notes/HBase.md)
 
 ## 机器学习 :man_astronaut:
 
-* [机器学习基础](MachineLearning/MachineLearningBasics.md)
+* [机器学习基础](notes/MachineLearningBasics.md)
 
 ## 练手 :egg:
 
