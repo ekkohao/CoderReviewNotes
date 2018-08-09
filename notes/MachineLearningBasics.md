@@ -2,9 +2,9 @@
 
 ## 基本概念
 
-下面三个图分别是对Price的三种拟合曲线，分别记为 $f_1,f_2,f_3$，后面概念会对这三个图详细说明。
+下面三个图分别是对Price的三种拟合曲线，分别记为 $f_1,f_2,f_3​$，后面概念会对这三个图详细说明。
 
-![img](./assets/v2-3f4959cd70308df496ecc4568a0d982d_hd.jpg)
+![img](MachineLearningBasics.assets/v2-3f4959cd70308df496ecc4568a0d982d_hd.jpg)
 
 ###### 损失函数（代价函数）
 
