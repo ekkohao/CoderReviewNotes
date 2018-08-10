@@ -15,13 +15,13 @@
 * [Java Mybatis](notes/JavaMybatis.md)
 * [Java工程框架](notes/JavaProjectStructs.md)
 
+> **C++**
+
+- [C++ 基础](notes/CppBasics.md)
+
 > Go
 
 * [Go 基础](notes/GoBasics.md)
-
-> **C++**
-
-* [C++ 基础](notes/CppBasics.md)
 
 > **Python**
 
