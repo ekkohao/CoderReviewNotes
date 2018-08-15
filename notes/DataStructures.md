@@ -653,17 +653,69 @@ Trie树，即字典树，又称单词查找树或键树，是一种树形结构�
 
 ### 5.9 线段树
 
-线段树可以看作树的每个结点都保存了一个线段区间的最值，它的两个子节点分别保存了两个子线段的最值。通过线段树很容易快去求出任意线段区间的最值。
+线段树可以看作树的每个结点都保存了一个线段区间的最值，它的两个子节点分别保存了左右两个子线段的最值。所有的子节点都保存了一个最小子段的最值。通过线段树很容易快去求出任意线段区间的最值。
 
-**示例**
+线段树不止可以解决区间最值得问题，也可以解决跟区间有关得其他问题。
 
-下图为一个数组 [2, 5, 1, 4, 9, 3] 构造的最小值线段树 
+**（一）常规线段树**
+
+如果端点是离散得情况下，一把用常规的线段树会节省空间，但是查询的时候就只能查询离散端点区间的值。
+
+插入方法可以用递归实现，即左右子区间可以判断插入的端点是否在自己管辖的区间内，如果是，则需要根据端点重新生成子线段，如：
+
+```cpp
+//区间最大值的线段树
+struct TreeNode {
+    int begin, end;
+    int value;
+    TreeNode * left, * right;
+}
+
+insert(TreeNode * root, int k, int value) { //向第 k 位置插入 v
+    if(!root || k < root->begin || k > root->end)
+        return;
+    if(root->value < value)
+        root->value = value;
+    
+    if(root->left) {
+        insert(root->left, k, value);
+        insert(root->right, k, value);
+    } else if (root->begin < k) {
+        root->left = new TreeNode{root->begin, k - 1, INT32_MIN, nullptr, nullptr};
+        root->right = new TreeNode{k, root->end, value, nullptr, nullptr};
+        insert(root->right, k, value);
+    } else if (root->end > k) {
+        root->left = new TreeNode{k, k, value, nullptr, nullptr};
+        root->right = new TreeNode{k + 1, root->end, INT32_MIN, nullptr, nullptr};        
+    }
+    
+}
+
+// start, end 只能是插入过的 k 值，因为现在树中只有这些端点
+int find(TreeNode *root, int start, int end) {
+    if(!root || start > root->end || end < root->start)
+        retutn INT32_MIN;
+    
+    if(start <= root->start && root->end <= end)
+        return root->value;
+
+    int lMax = find(root->left, start, end);
+    int rMax = find(root->right, start, end);
+    return max(lMax, rMax);
+}
+```
+
+**（二）数组线段树示例**
+
+数组线段树一般用于数组的区间最值查找。下图为一个数组 [2, 5, 1, 4, 9, 3] 构造的最小值线段树：
 
 ![img](DataStructures.assets/01204058-426dce8b8a05491b91edeba9ec2e4112.jpg) 
 
 当要查询区间 [2 - 4] 的最小值时，只需从根查到 [2 - 2] 和 [3 - 4] 即可得出。
 
-**构造线段树（复杂度 O(n*log n)）**
+**构造线段树（复杂度 O(n)）**
+
+线段树没有度为 1 的结点，所以线段树的总结树 = 2 * 线段树区间个数n - 1，所以复杂度为 O(n)。
 
 ```cpp
 // 构造最大线段树
@@ -708,5 +760,9 @@ int findCore(int cur, int &tree[], int &s, int &t, int l, int r) {
     return lMax > rMax ? lMax : rMax;
 }
 ```
+
+> 另外一种求区间最值得方法是 rmq，详见算法文档的动态规划章节。
+>
+> rmq 的缺点是对动态修改的区间最值效率较低，每次修改需要修改的信息很大，而线段树可以很好的优化动态插入和修改。
 
 ## 5. 图

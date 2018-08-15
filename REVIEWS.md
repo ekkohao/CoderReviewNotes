@@ -201,6 +201,8 @@ ORDER BY t.grade DESC LIMIT 0,3
 
 ## 4. Linux
 
+1. 管道
+
 ## 5. 分布式
 
 **（1）分布式锁的实现方式**
