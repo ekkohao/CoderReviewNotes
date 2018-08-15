@@ -10,9 +10,7 @@
 
 ## 1. 集合类型--Map ##
 
-各Map类的继承图：
-
-<div align=center>![img](./assets/938494-20170217112132097-6544029.png)</div>
+![img](JDKSourceCodeAnalysis.assets/1010726-20170621004756882-1379253225.gif) 
 
 ### 1.1 AbstractMap (JDK 1.8) ###
 
@@ -528,12 +526,12 @@ final Node<K,V> untreeify(HashMap<K,V> map) {
 ```java
 final Node<K,V>[] resize() {
     Node<K,V>[] oldTab = table;
-    int oldCap = (oldTab == null) ? 0 : oldTab.length;	//旧箱箱数组长度
-    int oldThr = threshold;		//旧门限值
+    int oldCap = (oldTab == null) ? 0 : oldTab.length;	// 旧箱箱数组长度
+    int oldThr = threshold;		// 旧门限值
     int newCap, newThr = 0;
-    if (oldCap > 0) {	//若旧箱数组不为空
-        if (oldCap >= MAXIMUM_CAPACITY) {	//若旧箱箱数组长度达到MAXIMUM_CAPACITY，无法扩容
-            threshold = Integer.MAX_VALUE;	//将门限值设为最大int
+    if (oldCap > 0) {	// 若旧箱数组不为空
+        if (oldCap >= MAXIMUM_CAPACITY) {	// 若旧箱箱数组长度达到MAXIMUM_CAPACITY，无法扩容
+            threshold = Integer.MAX_VALUE;	// 将门限值设为最大int
             return oldTab;
         }
         else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY && 	//新箱箱数组长度增加一倍
@@ -557,15 +555,15 @@ final Node<K,V>[] resize() {
     @SuppressWarnings({"rawtypes","unchecked"})
     Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];	//新箱数组
     table = newTab;
-    if (oldTab != null) {	//对旧箱的所有结点重新计算位置，
-        					//只有两种情况，保留原位，或者原位置向后移oldCap
+    if (oldTab != null) {	// 对旧箱的所有结点重新计算位置，
+        					// 只有两种情况，保留原位，或者原位置向后移 oldCap
         for (int j = 0; j < oldCap; ++j) {
             Node<K,V> e;
-            if ((e = oldTab[j]) != null) {// 获取每个箱的第一个元素，为null则跳过
+            if ((e = oldTab[j]) != null) {// 获取每个箱的第一个元素，为 null 则跳过
                 oldTab[j] = null;
-                if (e.next == null)	//箱子只有一个元素
+                if (e.next == null)	// 箱子只有一个元素
                     newTab[e.hash & (newCap - 1)] = e;
-                else if (e instanceof TreeNode)	//树型箱
+                else if (e instanceof TreeNode)	// 树型箱
                     ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);	//可能会逆树形化
                 else { // 链型箱
                     Node<K,V> loHead = null, loTail = null;
@@ -573,14 +571,14 @@ final Node<K,V>[] resize() {
                     Node<K,V> next;
                     do { //遍历链表，根据哈希取余的最高为，划分为两个链表
                         next = e.next;
-                        if ((e.hash & oldCap) == 0) {	//保留原位的
+                        if ((e.hash & oldCap) == 0) {	// 保留原位的
                             if (loTail == null)
                                 loHead = e;
                             else
                                 loTail.next = e;
                             loTail = e;
                         }
-                        else {	//向高位移动oldCap的
+                        else {	//向高位移动 oldCap 的
                             if (hiTail == null)
                                 hiHead = e;
                             else
@@ -674,7 +672,7 @@ abstract class HashIterator {
 
 	HashIterator() {
         expectedModCount = modCount;
-        Node<K,V>[] t = table; 	//直接获取原table生成iterator
+        Node<K,V>[] t = table; 	// 直接获取原table生成iterator
         current = next = null;
         index = 0;
         if (t != null && size > 0) { // advance to first entry
@@ -713,3 +711,361 @@ abstract class HashIterator {
 }
 ```
 
+## 2.锁
+
+### 2.1 Lock
+
+```java
+// 阻塞获取锁
+void lock();
+
+// 非阻塞获取锁，成功返回 true，失败返回 false
+boolean tryLock();
+// 阻塞时间内获取锁，返回 true，否则返回 false
+boolean tryLock(long time, TimeUnit unit) throws InterruptedException;
+
+// 阻塞获取锁，但是阻塞过程中接收中断信号
+void lockInterruptibly() throws InterruptedException;
+
+// 释放锁
+void unlock();
+
+// 用于同步的条件实例
+Condition newCondition();
+```
+
+### 2.2 ReentrantLock
+
+**排它同步器**
+
+首先使用 AQS 实现了排它同步器，包括公平和不公平两种。
+
+```java
+// 同步器
+private final Sync sync;
+
+// 这是一个排它的同步器，只能拥有线程才能操作 state
+abstract static class Sync extends AbstractQueuedSynchronizer {
+
+    // 子类实现
+    abstract void lock();
+
+    // 非公平的对 state 加 acquires
+    // 成功返回true，失败返回 false
+    final boolean nonfairTryAcquire(int acquires) {
+        final Thread current = Thread.currentThread();
+        int c = getState();
+        if (c == 0) { // state 为 0 ，可以获取锁
+            if (compareAndSetState(0, acquires)) { // CAS 成功则获取锁
+                setExclusiveOwnerThread(current);
+                return true;
+            }
+        }
+        else if (current == getExclusiveOwnerThread()) { // state 不为 0，
+            int nextc = c + acquires;					 // 则必须是当前线程才能操作
+            if (nextc < 0) // overflow
+                throw new Error("Maximum lock count exceeded");
+            setState(nextc);
+            return true;
+        }
+        return false;
+    }
+
+    // 对 state 减 releases 
+    protected final boolean tryRelease(int releases) {
+        int c = getState() - releases;
+        if (Thread.currentThread() != getExclusiveOwnerThread()) // 其他线程尝试操作，异常
+            throw new IllegalMonitorStateException();
+        boolean free = false;
+        if (c == 0) { // 释放锁
+            free = true;
+            setExclusiveOwnerThread(null);
+        }
+        setState(c);
+        return free;
+    }
+}
+
+// 非公平同步器
+static final class NonfairSync extends Sync {
+    private static final long serialVersionUID = 7316153563782823691L;
+
+    final void lock() {
+        if (compareAndSetState(0, 1)) // 先尝试直接锁
+            setExclusiveOwnerThread(Thread.currentThread());
+        else
+            acquire(1); // 队列阻塞获取
+    }
+
+    // tryAcquire 方法会在 lock 时循环调用
+    protected final boolean tryAcquire(int acquires) {
+        return nonfairTryAcquire(acquires);
+    }
+}
+
+// 公平同步器
+static final class FairSync extends Sync {
+
+    final void lock() {
+        acquire(1);// 队列阻塞锁定
+    }
+
+
+    protected final boolean tryAcquire(int acquires) {
+        final Thread current = Thread.currentThread();
+        int c = getState();
+        if (c == 0) {
+            if (!hasQueuedPredecessors() &&
+                compareAndSetState(0, acquires)) { // 前面没有等待，且 CAS 成功，获取锁
+                setExclusiveOwnerThread(current);
+                return true;
+            }
+        }
+        else if (current == getExclusiveOwnerThread()) { // 拥有锁线程
+            int nextc = c + acquires;
+            if (nextc < 0)
+                throw new Error("Maximum lock count exceeded");
+            setState(nextc);
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+上面可以看出，公平锁在获取时会判断前面是否有等待，保证的 FIFO 即公平。而非公平则不判断前面是否有等待，而是直接获取，那么锁被获取到的顺序就是随机的，即不公平。
+
+**构造函数**
+
+```java
+// 默认非公平
+public ReentrantLock() {
+    sync = new NonfairSync();
+}
+
+// 传参是否公平
+public ReentrantLock(boolean fair) {
+    sync = fair ? new FairSync() : new NonfairSync();
+}
+```
+
+**加锁解锁**
+
+```java
+public void lock() {
+    sync.lock();
+}
+
+public void lockInterruptibly() throws InterruptedException {
+    sync.acquireInterruptibly(1);
+}
+
+public boolean tryLock() {
+    return sync.nonfairTryAcquire(1);
+}
+
+public boolean tryLock(long timeout, TimeUnit unit)
+    throws InterruptedException {
+    return sync.tryAcquireNanos(1, unit.toNanos(timeout));
+}
+
+public void unlock() {
+    sync.release(1);
+}
+```
+
+### 2.3 CountDownLatch
+
+**共享同步器**
+
+```java
+private static final class Sync extends AbstractQueuedSynchronizer {
+    private static final long serialVersionUID = 4982264981922014374L;
+
+    // await 使用
+    // 返回共享同步器的锁是否被完全释放了
+    protected int tryAcquireShared(int acquires) {
+        return (getState() == 0) ? 1 : -1;
+    }
+
+    protected boolean tryReleaseShared(int releases) {
+        // Decrement count; signal when transition to zero
+        for (;;) {
+            int c = getState();
+            if (c == 0)
+                return false;
+            int nextc = c-1;
+            if (compareAndSetState(c, nextc)) // CAS 释放
+                return nextc == 0; // 返回释放后是否 stat 为 0
+        }
+    }
+}
+
+private final Sync sync;
+```
+
+**构造方法**
+
+```java
+public CountDownLatch(int count) {
+    if (count < 0) throw new IllegalArgumentException("count < 0");
+    this.sync = new Sync(count);
+}
+```
+**等待与自减**
+```java
+public void await() throws InterruptedException {
+    sync.acquireSharedInterruptibly(1); // 循环调用 tryAcquireShared
+}
+
+// 限制阻塞时间
+public boolean await(long timeout, TimeUnit unit)
+    throws InterruptedException {
+    return sync.tryAcquireSharedNanos(1, unit.toNanos(timeout));
+}
+
+// 一个线程执行完（满足一个条件），自减
+public void countDown() {
+    sync.releaseShared(1);
+}
+```
+
+### 2.4 CyclicBarrier
+
+**成员变量**
+
+```java
+// 循环代
+private static class Generation {
+        boolean broken = false; // 当前循环是否已损坏
+}
+
+// 保护栅栏入口的可重入锁
+private final ReentrantLock lock = new ReentrantLock();
+// 等待条件，即绊脚石
+private final Condition trip = lock.newCondition();
+// 参与者个数
+private final int parties;
+// 每次栅栏被破坏时执行的接口
+private final Runnable barrierCommand;
+// 当前代
+private Generation generation = new Generation();
+//需要等待的参与者
+private int count;
+```
+
+**构造方法**
+
+```java
+public CyclicBarrier(int parties, Runnable barrierAction) {
+    if (parties <= 0) throw new IllegalArgumentException();
+    this.parties = parties;
+    this.count = parties;
+    this.barrierCommand = barrierAction;
+}
+
+public CyclicBarrier(int parties) {
+    this(parties, null);
+}
+```
+
+**await 方法——阻塞等待下一轮循环 **
+
+```java
+public int await() throws InterruptedException, BrokenBarrierException {
+    try {
+        return dowait(false, 0L);
+    } catch (TimeoutException toe) {
+        throw new Error(toe); // cannot happen;
+    }
+}
+
+//在timeout指定的超时时间内，等待其他参与线程到达屏障点
+//如果超出指定的等待时间，则抛出TimeoutException异常，如果该时间小于等于零，则此方法根本不会等待
+public int await(long timeout, TimeUnit unit)
+    	throws InterruptedException,BrokenBarrierException,TimeoutException {
+    return dowait(true, unit.toNanos(timeout));
+}
+
+// 阻塞等待的核心方法
+private int dowait(boolean timed, long nanos) 
+    	throws InterruptedException, BrokenBarrierException,TimeoutException {
+    final ReentrantLock lock = this.lock;
+    lock.lock();
+    try {
+        final Generation g = generation;
+
+        if (g.broken) //栅栏已损坏
+            throw new BrokenBarrierException();
+
+        if (Thread.interrupted()) { //线程被中断，破坏栅栏，并抛出中断异常
+            breakBarrier();
+            throw new InterruptedException();
+        }
+
+        int index = --count; // 每有一个 await() 说明有一个参与者到了
+        if (index == 0) {  // 全到
+            boolean ranAction = false;
+            try {
+                final Runnable command = barrierCommand;
+                if (command != null)
+                    command.run();
+                ranAction = true;
+                nextGeneration(); //新一代，新一轮循环
+                return 0;
+            } finally {
+                if (!ranAction)
+                    breakBarrier();
+            }
+        }
+
+        // loop until tripped, broken, interrupted, or timed out
+        for (;;) {
+            try {
+                if (!timed)
+                    trip.await(); // 等待唤醒
+                else if (nanos > 0L)
+                    nanos = trip.awaitNanos(nanos);// 等待唤醒
+            } catch (InterruptedException ie) {
+                if (g == generation && ! g.broken) {
+                    breakBarrier();
+                    throw ie;
+                } else {
+                    // We're about to finish waiting even if we had not
+                    // been interrupted, so this interrupt is deemed to
+                    // "belong" to subsequent execution.
+                    Thread.currentThread().interrupt();
+                }
+            }
+
+            if (g.broken)
+                throw new BrokenBarrierException();
+
+            if (g != generation) // 唤醒后发现新一代，返回准备下轮循环
+                return index;
+
+            if (timed && nanos <= 0L) {
+                breakBarrier();
+                throw new TimeoutException();
+            }
+        }
+    } finally {
+        lock.unlock();
+    }
+}
+
+private void nextGeneration() {
+    // 唤醒被绊倒的线程
+    trip.signalAll();
+    // 重置为新一轮循环
+    count = parties;
+    generation = new Generation();
+}
+
+// 使栅栏损坏
+private void breakBarrier() {
+    generation.broken = true;
+    count = parties;
+    trip.signalAll();
+}
+```

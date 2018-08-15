@@ -49,7 +49,7 @@ Java1.8 时 HotSpot 彻底没有了永久带，而是将方法区放在一个与
 - **-Xss**  每个线程的栈大小
 - **-XX:NewSize**  新生代初始大小
 - **-XX:MaxNewSize**  新生代最大大小
-- **-Xmn**  年轻代固定大小
+- **-Xmn**  新生代固定大小
 - **-XX:SurvivorRatio N**  伊甸园区与幸存者区的比例，具体为`Eden : Survivor From : Survivor To = N : 1 : 1`
 - **-XX:NewRatio N**  新生代和老年代的比例，具体为`Old : Young = 1 : N`
 
@@ -537,6 +537,20 @@ public class FileSystemClassLoader extends ClassLoader {
     }
 }
 ```
+### 3.4 OSGI 加载机制
+
+OSGi的类加载架构并未遵循Java所推荐的双亲委派模型（Parents Delegation Model），它的类加载器通过严谨定义的规则从Bundle的一个子集中加载类。除了Fragment Bundle外，每一个被正确解析的Bundle都有一个独立的类加载器支持，这些类加载器之间互相协作形成了一个类加载的代理网络架构，因此OSGi中采用的是网状的类加载架构，而不是Java传统的树状类加载架构，如图所示。 
+
+![img](JavaVirtualMachine.assets/2224220.jpg) 
+
+在OSGi中，类加载器可以划分为３类。
+
+父类加载器：由Java平台直接提供，最典型的场景包括启动类加载器（Bootstrap ClassLoader）、扩展类加载器（Extension ClassLoader）和应用程序类加载器（Application ClassLoader）。在一些特殊场景中（如将OSGi内嵌入一个Web中间件）还会有更多的加载器组成。它们用于加载以“java.*”开头的类以及在父类委派清单中声明为要委派给父类加载器加载的类。
+
+Bundle类加载器：每个Bundle都有自己独立的类加载器，用于加载本Bundle中的类和资源。当一个Bundle去请求加载另一个Bundle导出的Package中的类时，要把加载请求委派给导出类的那个Bundle的加载器处理，而无法自己去加载其他Bundle的类。
+
+其他加载器：譬如线程上下文类加载器、框架类加载器等。它们并非OSGi规范中专门定义的，但是为了实现方便，在许多OSGi框架中都会使用。例如框架类加载器，OSGi框架实现一般会将这个独立的框架类加载器用于加载框架实现的类和关键的服务接口类。
+
 ## 4. Java内存模型
 
 ### 4.1 什么是内存模型
