@@ -835,6 +835,8 @@ switch 不支持 long，是因为 swicth 的设计初衷是为那些只需要对
 
 ## 6. 集合类
 
+![20140726231641750](JavaBasics.assets/20140726231641750.jpg)
+
 ### 6.1 Collection和Collections的差别
 
 `java.util.Collection` 是一个集合接口，Collection接口在Java类库中有非常多详细的实现。比如List、Set
