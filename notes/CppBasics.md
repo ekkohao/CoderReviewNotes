@@ -1,5 +1,3 @@
-# C++ 基础
-
 ## 引言
 
 无论什么时候接触 C++，都应该视 C++ 为一个语言联邦（这个概念来源于《Effective C++》），这个联邦的主要子语言包括：
@@ -754,6 +752,8 @@ void relay(T && t) { // t 接收一个右值，但自身是左值
 
 **通用引用**
 
+简单来说通用引用值得是模板形参为 `T &&` 的引用参数。
+
 之所以能完美转发，是因为通用引用的存在，通用引用可以绑定任何类型的变量。通用引用只存在两种定义：
 
 * auto && a = f()
@@ -879,19 +879,19 @@ C++ 新式风格 `int(1.2)`，更像是函数调用
 
 此外c++还有四种转换形式：
 
-* `dynamic_cast<T>` —— 动态识别类型转换
+* `dynamic_cast<T>` —— 动态识别类型转换，T 的类型只能时指针或引用。若为指针，方法实参必须为指针，这时转换失败返回 null，若为引用，则实参是左值，这时转换失败抛异常。有两种情况会转换成功，一种是由子类向父类转换；一种是父类向子类转换，且父类指针或引用原本（初始化时）就是指向该子类的。使用第二种情况可以判断父类原来指向哪个子类，只有当是原来的子类类型才会转换成功。
 
-* `static_cast<T>` —— 除了不可转换掉底层 const，其他都可以
+* `static_cast<T>` —— 除了不可转换掉底层 const，强转可以的它都可以。转换失败会报错。转换成功的情况包括基本类型间的转换，父子类间引用或指针的转换，void * 转换为其他指针等。
 
   ```cpp
   const char * s = "hi";
-  char * s1 = static_const<char *>(s);// 错误,不去去掉顶层const
+  char * s1 = static_const<char *>(s);// 错误,不能去掉顶层const
   string s2 = static_const<string>(s);// 正确
   ```
 
-* `const_cast<T>` —— 将非底层 const 转为 const，或者逆过来，逆过来转换时可以成功的，但是修改会报错。
+* `const_cast<T>` ——T 只能为指针或引用，将非底层 const 转为 const，或者逆过来，逆过来转换时可以成功的，但是修改会报错。不能转换时报错。
 
-* `reinterpret_cast<T>` —— 以较低层次位模式重新解释变量
+* `reinterpret_cast<T>` —— 以新的位模式重新解释变量，如把整形转为指针。
 
 ### 3.6 语句
 
@@ -1759,6 +1759,23 @@ class A {
 
 口诀：析删全，贝删贝，赋值构造看常引。
 
+**手动指定合成和删除**
+
+```cpp
+// default 为生成合成的，但究竟能不能生成合成的，还要满足上一小节的规则，否则生成的仍是删除的
+class A{
+    A() = default;
+    A(const & A) = default;
+    A(const && A) = default;
+};
+
+class A1{
+    A1() = delete; //禁用
+    A1(const & A) = delete; //禁用
+    A1(const && A) = delete; //禁用
+};
+```
+
 ### 5.5 成员变量初始化 & 初始化列表 & 初始化顺序
 
 **成员变量初始化**
@@ -2257,6 +2274,215 @@ class C : puclic A, public B{
 
 ## 6. 函数模板——泛型
 
+### 6.1 定义模板
+
+定义模板，首先要定义模板参数，模板参数可以作为形参或返回值的类型。如下示例：
+
+```cpp
+template <typename T> //定义模板类型变量
+int cmp(const T & a, const T & b) {
+    return a - b;
+}
+
+template <typename T, typename U> //定义多个模板类型变量，并能同名，也不能和作用域能变量重名
+int cmp(const T & a, const U & b) {
+    return a - b;
+}
+```
+
+其中，typename 关键字可以替换为 class，意思完全相同。
+
+模板参数还可以时非类型参数，如：
+
+```cpp
+template <unsigned N>	//定义非类型变量
+int size(const char (&arr)[N]) { // N 的大小会在传参的适合由编译器自动推断
+    return sizeof(arr);
+}
+
+int main () {
+    cout << size("abc") << endl; // 输出4，末尾有 `\0`
+}
+
+```
+
+模板也可以是类模板：
+
+```cpp
+template<typename T>
+class A {
+    T t;
+    void f();
+}
+
+void A<T>::f() { //类外定义
+    //...
+}
+
+int main() {
+	//当使用类时必须指定类型
+	A<int> a;
+    
+    return 0;
+}
+```
+
+类的成员方法也可单独定义模板，使用方法和前面的函数一样。
+
+模板类也可以先声明，而在稍后一点的位置定义。如：
+
+```cpp
+template<typename T> class A; // 前置定义，主要用来解决循环依赖
+template<typename T> class B;
+
+template<typename T> bool cmp(const & A<T>, const & B<T>); // 要求 A 在 cmp 之前定义
+
+template<typename T> class A {
+    
+    friend bool cmp(const & A<T>, const & B<T>); // 要求 cmp 在 A 之前定义
+    //...
+}
+
+template<typename T> class B {
+    //...
+}
+```
+
+类模板和友元函数模板的关系。
+
+友元前不使用模板定义，只代表模板的类型参数和友元函数类型参数是绑定的，即 T 为 int，那么 float 的友元函数模板不是 T 为 int 的友元。
+
+友元前使用模板定义，代表友元函数所有的类型参数都是类的友元，无论类的模板参数是什么类型。
+
+**模板别名**
+
+```cpp
+template<typename T> using twin = pair<T, T>; // 声明别名
+twin<int> = make_pair(1, 2);
+
+//也可以只指定部分模板变量
+template<typename T> using twin2 = pair<T, char>; // 声明别名
+twin2<int> = make_pair(1, 'a');
+```
+
+**显示实例化模板**
+
+默认模板实例化只在编译时被使用到时进行，当两个或多个独立编译的文件中使用了相同参数的相同模板，那么就会生成多份模板实例。可以使用显示实例化来避免这种开销。
+
+```cpp
+//实例化定义
+template A<int>;
+
+//声明
+extern template A<int>;
+```
+
+当遇到实例化定义时，会去实例化模板，当遇到 extern 声明时，证明在其他文件有且存在一个定义。由于在使用一个模板时就会实例化，所以 extern 声明必须在使用之前声明。
+
+同一个文件内重复使用同一参数的同一模板，是只会生成一份模板实例的。
+
+### 6.2 模板实参推断
+
+实参的匹配并不麻烦，若形参类型使用的是不同的模板参数，那么它们的类型可以不同，但是如果形参类型使用相同的类型，那么它们的类型必须完全相同，一个 int 和一个 long 都不可以。
+
+调用泛型参数时实参的顶层 const 将被忽略，即可以把一个顶层 const 转为非 const。
+
+```cpp
+template <typename T>
+void func(T a, T b);
+
+int a = 1;
+long b = 2; 
+func(a, b); //错误
+//我们可以显示指定形参就可以调用了
+func<long>(a, b);
+
+int arr1[5][5];
+int arr2[10][9];
+int arr3[10][5];
+func(arr1, arr2); //错误
+func(arr1, arr3); //正确
+```
+
+**引用折叠**
+
+先明确下几种引用的接收类型
+
+* 左值引用能接受除右值以外的所有非 const ；
+
+* 右值引用只能接收右值
+* const 左值引用可以接收所有类型
+* const 右值引用只能接收右值
+
+但是当自动推断时，右值引用可以接收左值，右值，左值引用以及右值引用，这是因为引用折叠的存在：
+
+* 右值引用接收右值引用时将被折叠为右值引用（T && && -> T &&）
+* 其他情况都被折叠为左值引用（T & &&|&& &|& -> T &&）
+
+左值引用的折叠规则也和上面一样。
+
+### 6.3 std::move
+
+标准库move函数是使用右值引用的模板的一个很好的例子。标准库是这样定义std::move的：
+
+```cpp
+template <typename T>
+typename remove_reference<T>::type&& move(T&& t)
+{
+    return static_cast<typename remove_reference<T>::type&&>(t);
+}
+```
+
+我们考虑如下代码的工作过程：
+
+```cpp
+std::string s1("hi"), s2;
+s2 = std::move(string("hi"));    // 正确，从一个右值移动数据
+s2 = std::move(s1);                // 正确，但是在赋值之后，s1的值是不确定的
+```
+
+在第一个赋值中，实参是string类型的右值，因此过程为：
+
+- 推断T的类型为 string
+- remove_reference\<string> 的 type 成员是 string
+- move 返回类型是 string&&
+- move 的函数参数t的类型为 string&&
+
+因此，这个调用实例化 move\<string>，即函数
+
+```cpp
+string && move(string && t)
+```
+
+在第二个赋值中，实参是一个左值，因此：
+
+- 推断T的类型为 string&
+- remove_reference\<string&> 的 type 成员是 string
+- move 返回类型是 string&&
+- move 的函数参数t的类型为 string& &&，会折叠成 string&
+
+因此，这个调用实例化 move\<string&>，即
+
+```cpp
+string && move(string & t)
+```
+
+　　通常情况下，static_cast 只能用于其他合法的类型转换。但是有一条针对右值的特许规则：虽然不能隐式的将一个左值转换成右值引用，但我们可以用static_cast显示的将一个左值转换为一个右值。
+
+### 6.4 模板与重载
+
+```cpp
+template<typename T>
+int func(T & t);
+
+template<typename T>
+int func(T * t);
+```
+
+上面的两个模板将构成重载，当T 为引用是会选择上面的模板，T 为指针会选择下面的模板。
+
+模板和模板之间的重载，模板和非模板之间的重载，当有多个可行方法时，一般不会报错，而是选择最具特例化的那个可行解，可以理解为需要转变最少的可行解。如若不需要类型转换，非模板方法是优于模板方法的。
+
 ## 7. 内存分布
 
 C++内存分为5个区域（堆栈全常代）：
@@ -2301,7 +2527,7 @@ C++内存分为5个区域（堆栈全常代）：
 
 ## 8. 动态内存 TODO
 
-#### 1.4.1 malloc & free
+### 8.1 malloc & free
 
 ```cpp
 //申请空间但不初始化，申请失败是返回 NULL
@@ -2320,13 +2546,14 @@ int * p = (int *) realloc(p, 10);// 调整为10字节大小
 free(p);// 释放空间
 ```
 
-#### 1.4.2 new & delete
+### 8.2 new & delete
 
 ```cpp
 //申请单个空间，申请失败抛出 bac_alloc 异常。
 int * pi = new int; // 未初始化
 int * pi = new int();// 初始化为 0
 int * pi = new int(1024);// 初始化为 1024
+int const * pi = new const int(1); // 可以 new const，但必须初始化
 
 delete pi; pi = nullptr; //释放单个空间
 
@@ -2351,6 +2578,31 @@ delete [] pi; // 释放数组空间
 > 在C++中，内存区分为5个区，分别是堆、栈、自由存储区、全局/静态存储区、常量存储区；
 >
 > 在C中，C内存区分为堆、栈、全局/静态存储区、常量存储区；
+
+## 8.3 智能指针
+
+智能指针在\<memory\> 有三种
+
+* shared_ptr，共享指针。
+* unique_ptr，独占指针。
+* weak_ptr，弱引用，指向 shard_ptr 所管理的对象。
+
+shared_ptr 和 unique_ptr 默认初始化都指向空指针。它们都支持的方法：
+
+* `p` —— 变量本身可以当布尔值使用，当指向空时为false
+* `*p` —— 解引用
+* `p->` —— 调用指向的成员
+* `p.get()` —— 获取直接指针。若智能指针释放了内存，该方法已获取的指针访问可能会出错。
+* `swap(p,q)/p.swap(q)` —— 交换指针
+
+shared_ptr 独有的操作：
+
+* `make_shared<T>(args)` —— 创建一个共享指针，args 必须对应 T 的一个构造函数。
+* `shared——ptr<T> p(q)` —— 共享指针 q 给 p，会增加引用计数
+* `p = q` —— p 转换为  q 的指向，p 的引用计数减一，q 的引用计数加一。
+* `p.unique()` —— 返回引用计数是否为一。
+* `p.use_count()` —— 返回引用计数
+* `p.reset(new int(4))` —— 释放一个引用计数并重置指针
 
 ## 9. IO（输入与输出）
 
@@ -2402,9 +2654,41 @@ int sscanf( const char* buffer, const char* format, … ); //从字符串输入
 
 #### 1.7.2 getchar & putchar
 
+```cpp
+char c = getchar(); //输入，只读取缓存区的第一个字符，无论是什么字符，其他字符仍保留在缓存区
+putchar(c);//输出
+```
+
 #### 1.7.3 gets & puts
 
+```cpp
+char s[1024];
+gets(s);//输入，从缓存区第一个字符（任何字符）开始，一直到遇到个回车符，然后末尾加 `\0`
+puts(s);
+```
+
+众所周知，gets 方法不安全。
+
 #### 1.7.4 cin & cout
+
+**cin**
+
+使用 cin 的流输入，每个输入项都是第一个非空白字符开始，遇到空白字符结束，当然，char 仍然只读一个字符。
+
+其他方法：
+
+* `cin.get()` 获取一个字符，效果等同 getchar()
+* `cin.get(char)` 同时，只是使用引用返回
+* `cin.get(array, length)`，接收长度为 length - 1的字符串（任何字符），最后一个位置存 `'\0'`
+* `cin.getline()` 获取一行，效果等同gets()
+
+**cout**
+
+流输出，若要让扩展支持的类型，需要实现下面的友元方法
+
+```cpp
+friend ostream & operator<<(ostream &, const T &);
+```
 
 # 参考文档
 

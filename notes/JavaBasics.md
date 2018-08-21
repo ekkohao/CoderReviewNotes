@@ -1580,7 +1580,7 @@ Java 是纯粹的面向对象语言，所有的对象都继承自 java.lang.Obje
 
 **造成泄漏原因**
 
-ThreadLocal 的实现是这样的：每个 Thread 维护一个 ThreadLocalMap 映射表，这个映射表的 key 是 ThreadLocal实例本身，value 是真正需要存储的 Object。 
+ThreadLocal 的实现是这样的：每个 Thread 维护一个 ThreadLocalMap 映射表，这个映射表的 key 是 ThreadLocal实例本身，value 是真正需要存储的 Object。 
 
 而 ThreadLocalMap 使用 ThreadLocal的弱引用作为key，如果持有 ThreadLocal 的对象被销毁了，即  ThreadLocal 的强引用没了，那么系统 GC 的时候，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap 中就会出现 key 为 null 的 Entry，就没有办法访问这些 key 为 null 的 Entry 的 value，如果当前线程再迟迟不结束的话，这些 key 为 null 的 Entry 的 value 就会一直存在一条强引用链：Thread Ref -> Thread -> ThreaLocalMap -> Entry -> value永远无法回收，造成内存泄漏。
 
