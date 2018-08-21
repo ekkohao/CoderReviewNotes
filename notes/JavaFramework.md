@@ -2,6 +2,15 @@
 
 ## 1. Spring
 
+spring 的核心包
+
+* spring-core
+* spring-beans
+* spring-context
+* spring-web
+* spring-webmvc
+* spring-core
+
 ### 1.1 Spring 的一些概念及理解
 
 **（一）（Inverse of Control）**
@@ -81,6 +90,47 @@ spring 有三级缓存： 
 * 工厂
 * 代理
 * 适配器
+
+### 1.4 SpringMVC
+
+#### 1.4.1 Tomcat 与 Servlet
+
+Tomcat 是一个 web 容器，底层使用 socket 封装好了 HTTP 请求。Tomcat 中一个完整请求的过程如下
+
+1. 客户端发起请求。
+2. 当一个 Tomcat 接收到一个客户端请求时，会把请求转发给 Servlet 容器。
+3. Servlet 会生成 HttpRequest 对象和 HttpResponse 对象，并使用这个两个对象作为参数调用 HttpServlet 的 service 方法。
+4. service 方法处理完成后，Servlet 把 HttpServlet 的相应结果返回给 Tomcat 容器，
+5. Tomcat 再把结果返回给客户端。
+6. 客户端收到响应。
+
+下图描述了上述流程：
+
+![](JavaFramework.assets/tomcat.png)
+
+可以看出我们使用 tomcat 和 servlet 只用实现 HttpServlet 的相关处理方法即可，servlet 提供了 web.xml 配置文件，借此可以配置请求 uri 与 HttpServlet 的映射关系，如：
+
+```xml
+<servlet>
+   <servlet-name>HelloServlet</servlet-name>
+   <servlet-class>mypack.HelloServlet</servlet-class> <!-- HelloServlet 实现类-->
+</servlet>
+<servlet-mapping>
+   <servlet-name>HelloServlet</servlet-name>
+   <url-pattern>/hello</url-pattern> <!-- 需要映射的 uri-->
+</servlet-mapping>
+```
+
+#### 1.4.2 SpringMVC 原理
+
+SpringMVC 的 `org.springframework.web.servlet.DispatcherServlet` 就是 HttpSerlvet 的实现类。SpringMVC 使用此类将请求分发给 Controller，Controller 处理业务（可能用到 Model 层），处理完成后将数据交给 View 层渲染，View 层将渲染的结果使用 HttpReponse 返回，这个过程就是 SpringMVC 工作的大致流程。
+
+下面是更详细的流程：
+
+1. DispathcherSerlvet 接收到请求后调用 HandlerMapping 找到具体的 HandlerExecutionChain（包含了Handler 和所有相关的 HandlerInterceptor）
+2. 然后 DispathcherSerlvet 轮询所有的 HandlerAdapter，找到能够处理 Handler 的 HandlerAdapter
+3. 由 HandlerAdapter 调用具体的 Controller 处理请求得到 ModelAndView 返回给DispathcherSerlvet 
+4. DispathcherSerlvet 调用 ViewReslover 解析 ModelAndView 生成最终的渲染图，并将渲染图写到 HttpReponse 。
 
 ## 2. ORM
 
