@@ -9,7 +9,7 @@ spring 的核心包
 * spring-context
 * spring-web
 * spring-webmvc
-* spring-core
+* spring-aop
 
 ### 1.1 Spring 的一些概念及理解
 
