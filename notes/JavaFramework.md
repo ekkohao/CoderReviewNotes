@@ -132,6 +132,14 @@ SpringMVC 的 `org.springframework.web.servlet.DispatcherServlet` 就是 HttpSer
 3. 由 HandlerAdapter 调用具体的 Controller 处理请求得到 ModelAndView 返回给DispathcherSerlvet 
 4. DispathcherSerlvet 调用 ViewReslover 解析 ModelAndView 生成最终的渲染图，并将渲染图写到 HttpReponse 。
 
+#### 1.4.3 和 Structs 的区别
+
+SpringMVC 的入口是 Servlet,而 Structs2 的是filter。
+
+SpringMVC 是一个方法对应一个请求（控制层每个方法对应一个请求）。
+
+Structs 是一个类对应一个请求（配置文件里配置 uri 和 类的映射）。
+
 ## 2. ORM
 
 ### 2.1 Mybatis
