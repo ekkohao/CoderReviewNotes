@@ -230,11 +230,20 @@
 
    答：free -k, free -m, top
 
-7. apache 与 ngnix 的 IO 模型
+7. 子进程创建的三种方式
 
-   答：select 与 epoll
+8. fork 共享的资源
+   答：已打开文件，用户和用户组ID
 
-8. 
+9. 孤儿进程与僵尸进程
+
+10. 六种 IPC
+
+11. select, poll, epoll
+    答：数量限制，触发方式，事务检测
+
+12. apache 与 ngnix 的 IO 模型
+    答：select 与 epoll
 
 ## 7. 分布式
 
@@ -252,11 +261,13 @@
 
 4. 分布式 Session 的实现方式
 
-   答：单服务器
+   答：反向代理使同一session请求同一服务器（单点失效）；服务器之间 Session 同步（同步消耗）；同一存储 Redis（多了一次网络请求）
 
 5. CAP 与 BASE
 
 6. 负载均衡的实现方式，优缺点。ngnix 用到了哪几种。
+
+7. 数据分片方式
 
 ## 8. Redis 与 Memcached
 

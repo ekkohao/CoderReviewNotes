@@ -870,7 +870,7 @@ int msgget(key_t key, int msgflg);
  * @param msgid msgget返回的消息队列标识符
  * @param msg_ptr 消息的指针, 指针msg_ptr所指向的消息结构一定要是以一个长整型成员变量开始的结构体
  * @param msg_sz 消息长度 不包括长整型消息类型成员变量的结构体长度
- *@param msgflg 用于控制当前消息队列满或队列消息到达系统范围的限制时将要发生的事情
+ * @param msgflg 用于控制当前消息队列满或队列消息到达系统范围的限制时将要发生的事情
  **/
 int msgsend(int msgid, const void *msg_ptr, size_t msg_sz, int msgflg); 
 
