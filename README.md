@@ -4,6 +4,8 @@
 | :----------------------------------------------------: | :--------------------------------------------------: | :----------------------------------------------: | :----------------------------------------------: | :--------------------------------------------: | :------------------------------------------------------: |
 | [:wrench:<br />编程语言和工具](#编程语言和工具-wrench) | [:books:<br />计算机专业基础](#计算机专业基础-books) | [:floppy_disk:<br />数据库](#数据库-floppy_disk) | [:sweat_drops:<br />分布式](#分布式-sweat_drops) | [:baby_chick:<br />大数据](#大数据-baby_chick) | [:man_astronaut:<br />机器学习](#机器学习-man_astronaut) |
 
+本仓库是个人的复习总结笔记，如有错误欢迎指出，可以发起 issue 或邮件 jerehao@126.com
+
 ## 编程语言和工具 :wrench:
 
 > **Java**
@@ -12,7 +14,6 @@
 * [Java 虚拟机](notes/JavaVirtualMachine.md)
 * [JDK 源码分析](notes/JDKSourceCodeAnalysis.md)
 * [设计模式](notes/DesignPatterns.md)
-* [Java Mybatis](notes/JavaMybatis.md)
 * [Java工程框架](notes/JavaProjectStructs.md)
 
 > **C++**

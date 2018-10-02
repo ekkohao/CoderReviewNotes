@@ -2,123 +2,146 @@
 
 ## 1. JAVA
 
-1. 设计模式
+1. 集合类
+   1. HashMap 原理 —— get, put, resize(re) 16，8，6，64
+   2. ConcurrentHashMap 原理 —— get, put, resize
+   3. TreeMap 
+   4. ArrayList（Vector，Stack）与 LinkedList 
+   5. HashSet，TreeSet
+2. 多线程
+   1. 实现线程的方法（三种）
+   2. 线程的六种方法
+   3. 线程池原理
+   4. synchronize 与 lock
+   5. synchronize 工作原理
+   6. 各种锁
+3. IO
+   1. BIO
+   2. NIO
+   3. AIO
+4. 基础
+   1. 关键字：static，final
+   2. 
+
+///////////////////////////////////////// SEP ////////////////////////////////////////
+
+3. 设计模式
 
    答：2+1+3
 
-2. 设计原则
+4. 设计原则
 
    答：接单开，依里迪
 
-3. 新建一个线程的方法，具体实现；Thread 类的方法有哪些，哪些可中断
+5. 新建一个线程的方法，具体实现；Thread 类的方法有哪些，哪些可中断
 
    答：三种；6个（run, start, join, interrupt, sleep, yelid），进入阻塞态的都可以中断（join, sleep, 以及 Object,wait）
 
-4. 线程池的关键参数解释，及四种简便线程池创建类
+6. 线程池的关键参数解释，及四种简便线程池创建类
 
-5. 阻塞队列原理，手写一个阻塞队列
+7. 阻塞队列原理，手写一个阻塞队列
 
-6. synchronized 使用方法与锁膨胀过程
+8. synchronized 使用方法与锁膨胀过程
 
-7. synchronized 与 ReentrantLock 
+9. synchronized 与 ReentrantLock 
 
-8. wait() 与 sleep() 
+10. wait() 与 sleep() 
 
-9. 知道的并发容器和同步工具类
+11. 知道的并发容器和同步工具类
 
-   答：concurrent\*，copyOnWrite\*；Unsave.\*，Atomic\*，闭锁，循环栅栏
+    答：concurrent\*，copyOnWrite\*；Unsave.\*，Atomic\*，闭锁，循环栅栏
 
-10. 闭锁和循环栅栏的实现
+12. 闭锁和循环栅栏的实现
 
-11. java 相关的锁
+13. java 相关的锁
 
     答：原生同步锁，可重入锁，读写锁（读者优先/写者优先）
 
-12. 两种动态代理，它们的区别
+14. 两种动态代理，它们的区别
 
-13. ThreadLocal的内存泄露问题
+15. ThreadLocal的内存泄露问题
 
-14. 父子类初始化顺序
+16. 父子类初始化顺序
 
-15. 重名类加载机制
+17. 重名类加载机制
 
-16. BIO - NIO - AIO
+18. BIO - NIO - AIO
 
-17. NIO 的三种关键角色
+19. NIO 的三种关键角色
 
-18. 常用的 IO 类
+20. 常用的 IO 类
 
-19. 集合类
+21. 集合类
 
-20. HashMap 与 HashTable 与 ConcurrentHashMap
+22. HashMap 与 HashTable 与 ConcurrentHashMap
 
-21. LInkedList 与 ArrayList
+23. LInkedList 与 ArrayList
 
-22. ArrayList 与 Arrays.asList() 与 Vector
+24. ArrayList 与 Arrays.asList() 与 Vector
 
-23. String 与 StringBuffer 与 StringBuilder
+25. String 与 StringBuffer 与 StringBuilder
 
-24. 将线程不安全的集合转为线程安全的集合
+26. 将线程不安全的集合转为线程安全的集合
 
-25. 抽象方法与接口
+27. 抽象方法与接口
 
-26. Object 的通用方法（四个）
+28. Object 的通用方法（四个）
 
-27. final 、static 、finalize() 作用
+29. final 、static 、finalize() 作用
 
-28. 静态代理与动态代理
+30. 静态代理与动态代理
 
-29. 哪个类可以用作LRU
+31. 哪个类可以用作LRU
 
-30. 有哪几种异常，分别举例
+32. 有哪几种异常，分别举例
 
-31. 四种引用，它们的作用
+33. 四种引用，它们的作用
 
-32. 并发情况下 HashMap 的问题
+34. 并发情况下 HashMap 的问题
 
-33. JVM 内存布局，堆的内存布局
+35. JVM 内存布局，堆的内存布局
 
-34. 虚拟机方法区的演变
+36. 虚拟机方法区的演变
 
-35. -Xmx，-Xms，-Xmn（-XX: NewSIze, -XX:MaxNewSize），-Xss，-XX:SurvivorRatio, -XX:NewRatio N
+37. -Xmx，-Xms，-Xmn（-XX: NewSIze, -XX:MaxNewSize），-Xss，-XX:SurvivorRatio, -XX:NewRatio N
 
-36. JVM 调优
+38. JVM 调优
 
-37. 对象内存布局，OOP-KLASS
+39. 对象内存布局，OOP-KLASS
 
-38. 对象存活判断，finalize() 方法处理
+40. 对象存活判断，finalize() 方法处理
 
-39. 垃圾回收算法
+41. 垃圾回收算法
 
-40. 内存分配与回收策略
+42. 内存分配与回收策略
 
-41. 分带或分区回收的可达性分析过程
+43. 分带或分区回收的可达性分析过程
 
-42. 并发标记过程（三色标记法）
+44. 并发标记过程（三色标记法）
 
-43. 垃圾回收器（所有），回收过程
+45. 垃圾回收器（所有），回收过程
 
-44. 类加载过程
+46. 类加载过程
 
-45. 类加载器和类加载机制，优点
+47. 类加载器和类加载机制，优点
 
-46. OSGI 类加载机制
+48. OSGI 类加载机制
 
-47. java 内存模型
+49. java 内存模型
 
-48. volatile 两层语义
+50. volatile 两层语义
 
-49. Spring IOC 实现，优点
+51. Spring IOC 实现，优点
 
-50. Spring AOP 实现，AOP 思想
+52. Spring AOP 实现，AOP 思想
 
-51. BeanFactory 和 ApplicationContext
+53. BeanFactory 和 ApplicationContext
 
-52. Bean 的配置方式，生命周期
+54. Bean 的配置方式，生命周期
 
-53. Spring 中用到的设计模式
+55. Spring 中用到的设计模式
 
-54. Spring 循环依赖的解决
+56. Spring 循环依赖的解决
 
 ## **2**. 数据库
 
@@ -201,6 +224,7 @@
 ## 4. 操作系统
 
 1. 读写锁。公平竞争，读者优先和写者优先的实现
+2. 分页式内存管理原理
 
 ## 5. 算法和数据结构
 
@@ -279,19 +303,22 @@
    答：双写一致性；缓存穿透，缓存击穿，缓存雪崩；并发竞争key
 4. redis 单线程性能高的原因
    答：三点
-5. redis 与 memchached 区别
+5. redis 五种基本类型和底层实现
+6. redis 与 memchached 区别
    答：类型；线程；持久化
-6. redis 过期删除机制
+7. redis 过期删除机制
    答：定期抽样删除 + 惰性删除。
-7. redis 内存淘汰策略
+8. redis 内存淘汰策略
    答：六种
-8. 两种持久化机制，优缺点
+9. 两种持久化机制，优缺点
    答：RDB（适合**备**份，恢复**快**；save**阻**塞，大备份**耗**时，**丢**失大）；AOF（**丢**失小；文件**大**，恢复**慢**）
-9. AOF 重写步骤
-   答：三步
-10. 主从复制，创建命令，复制过程
+10. AOF 重写步骤
+       答：三步
+11. 主从复制，创建命令，复制过程
     答： slaveof；三步
-11. redis 事物
+12. redis cluster
+13. redis 分片的三种方式
+14. redis 事物原理和使用
 
 ## 9. Kafka 与 RocketMQ
 

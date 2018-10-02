@@ -592,6 +592,18 @@ CREATE TABLE 'method_lock'(
 
 EXPIRE 可以为一个键值对设置一个过期时间，从而避免了死锁的发生。
 
+```java
+jedis.set(lockKey, requestId, "NX", "PX", expireTime); // 返回 OK 表示加锁成功
+
+
+//删除方法1
+jedis.del(lockkey); //未验证锁的所有者，谁都可以删除
+//删除方法2，脚本删除，保证原子性
+String srcipt = "if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+
+jedis.eval(script, Collections.singletonList(lockkey), Collections.singletonList(requestId));
+```
+
 **（二）RedLock 算法**
 
 RedLock 算法使用了多个 Redis 实例来实现分布式锁，这是为了保证在发生单点故障时还可用。
@@ -752,8 +764,8 @@ Two-phase Commit（2PC），可以保证一个事务跨越多个节点时保持 
 TCC 其实就是采用的补偿机制，其核心思想是：针对每个操作，都要注册一个与其对应的确认和补偿（撤销）操作。它分为三个阶段：
 
 - Try 阶段：主要是对业务系统做检测及资源预留
-- Confirm 阶段：主要是对业务系统做确认提交，Try 阶段执行成功并开始执行 Confirm阶段时，默认 Confirm阶段是不会出错的。即：只要Try成功，Confirm一定成功。
-- Cancel 阶段：主要是在业务执行错误，需要回滚的状态下执行的业务取消，预留资源释放。
+- Confirm 阶段：主要是对业务系统做确认提交，Try 阶段执行成功并开始执行 Confirm阶段时，必须保证 Confirm 阶段是一定可以执行成功的。即：只要Try成功，Confirm一定成功。
+- Cancel 阶段：主要是预留资源释放。
 
 举个例子，假入 Bob 要向 Smith 转账，思路大概是： 我们有一个本地方法，里面依次调用 1、首先在 Try 阶段，要先调用远程接口把 Smith 和 Bob 的钱给冻结起来。 2、在 Confirm 阶段，执行远程调用的转账的操作，转账成功进行解冻。 3、如果第2步执行成功，那么转账成功，如果第二步执行失败，则调用远程冻结接口对应的解冻方法 (Cancel)。 
 
